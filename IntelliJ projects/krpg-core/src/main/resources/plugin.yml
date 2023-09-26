@@ -1,0 +1,12 @@
+name: KRPG-Core
+version: 1.0.0-SNAPSHOT
+main: io.katniss218.krpg.core.KRPGCore
+description: Test plugin for paperweight-userdev
+load: STARTUP
+authors:
+  - Author
+prefix: KRPG-Core
+commands:
+  rpgtest:
+    usage: Just run the command!
+api-version: 1.18

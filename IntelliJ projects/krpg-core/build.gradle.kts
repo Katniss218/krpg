@@ -1,10 +1,10 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+//import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
   `java-library`
   id("io.papermc.paperweight.userdev") version "1.3.6"
   id("xyz.jpenilla.run-paper") version "1.0.6" // Adds runServer and runMojangMappedServer tasks for testing
-  id("net.minecrell.plugin-yml.bukkit") version "0.5.1" // Generates plugin.yml
+  //id("net.minecrell.plugin-yml.bukkit") version "0.5.1" // Generates plugin.yml
 }
 
 group = "io.papermc.paperweight"
@@ -55,22 +55,22 @@ tasks {
 }
 
 // Configure plugin.yml generation
-bukkit {
-  name = "KRPG-Core"
-  prefix = "KRPG-Core"
-  load = BukkitPluginDescription.PluginLoadOrder.STARTUP
-  main = "io.katniss218.krpg.core.KRPGCore"
-  apiVersion = "1.18"
-  authors = listOf("Author")
-
-  commands {
-    register("rpgtest") {
-      //description = "This is a test command!"
-      //aliases = listOf("t")
-      //permission = "testplugin.test"
-      usage = "Just run the command!"
-      // permissionMessage = "You may not test this command!"
-    }
-    // ...
-  }
-}
+//bukkit {
+//  name = "KRPG-Core"
+//  prefix = "KRPG-Core"
+//  load = BukkitPluginDescription.PluginLoadOrder.STARTUP
+//  main = "io.katniss218.krpg.core.KRPGCore"
+//  apiVersion = "1.18"
+//  authors = listOf("Author")
+//
+//  commands {
+//    register("rpgtest") {
+//      //description = "This is a test command!"
+//      //aliases = listOf("t")
+//      //permission = "testplugin.test"
+//      usage = "Just run the command!"
+//      // permissionMessage = "You may not test this command!"
+//    }
+//    // ...
+//  }
+//}
