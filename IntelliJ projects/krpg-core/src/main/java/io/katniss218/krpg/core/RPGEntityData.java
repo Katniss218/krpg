@@ -1,4 +1,4 @@
-package io.katniss218.krpg.core.nbt;
+package io.katniss218.krpg.core;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

@@ -1,4 +1,4 @@
-package io.katniss218.krpg.core.nbt;
+package io.katniss218.krpg.core;
 
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
