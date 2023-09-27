@@ -8,5 +8,7 @@ authors:
 prefix: KRPG-Core
 commands:
   rpgtest:
-    usage: Just run the command!
+    usage: .
+  rpgitem2:
+    usage: .
 api-version: 1.18
