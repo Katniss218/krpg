@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public enum RPGItemType
 {
+    UNDEFINED( 0 ),
     WEAPON( 32768 ),
     ARMOR( 32769 ),
     CONSUMABLE( 32770 ),

@@ -55,8 +55,8 @@ public class RPGItemRegistry
 
     static void LoadItemsFromYamlFile( File file )
     {
-        Bukkit.getLogger().info( "loading items from " + file.getPath() );
-        System.out.println( "loading items from " + file.getPath() );
+        KRPGCore.getPluginLogger().info( "loading items from " + file.getPath() );
+        KRPGCore.getPluginLogger().info( "loading items from " + file.getPath() );
         FileConfiguration config = YamlConfiguration.loadConfiguration( file );
 
         ConfigurationSection rpgItems = config.getConfigurationSection( CONFIG_NODE );

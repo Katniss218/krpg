@@ -2,7 +2,8 @@ package io.katniss218.krpg.core;
 
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
-import org.bukkit.inventory.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,16 +32,20 @@ public class RPGItemData
     }
 
     @Nullable
-    public static RPGItemData getFrom( @Nonnull ItemStack item )
+    public static RPGItemData getFrom( @Nonnull ItemStack nmsItem )
     {
-        var nmsItemStack = CraftItemStack.asNMSCopy( item );
-
-        var compound = nmsItemStack.getTag();
+        var compound = nmsItem.getTag();
         if( compound == null )
         {
             return null;
         }
 
+        return getFrom(compound);
+    }
+
+    @Nullable
+    public static RPGItemData getFrom( @Nonnull CompoundTag compound )
+    {
         RPGItemData data = new RPGItemData();
         data.id = compound.getString( TAG_NAME_ID );
         data.prefixId = compound.getString( TAG_NAME_PREFIX );
@@ -49,22 +54,27 @@ public class RPGItemData
         return data;
     }
 
-    @Nonnull
-    public ItemStack applyToCopy( @Nonnull ItemStack item )
+    @Contract(pure = false)
+    public void applyTo( @Nonnull ItemStack nmsItem )
     {
-        var nmsItemStack = CraftItemStack.asNMSCopy( item );
-        var compound = nmsItemStack.getTag();
+        var compound = nmsItem.getTag();
 
         if( compound == null )
         {
             compound = new CompoundTag();
         }
 
-        compound.putString( TAG_NAME_ID, this.id );
-        compound.putString( TAG_NAME_PREFIX, this.prefixId );
-        compound.putInt( TAG_NAME_DURABILITY_REMAINING, this.durabilityRemaining );
+        applyTo( compound );
 
-        nmsItemStack.setTag( compound );
-        return CraftItemStack.asBukkitCopy( nmsItemStack );
+        nmsItem.setTag( compound );
+    }
+
+    @Contract(pure = false)
+    public void applyTo( @Nonnull CompoundTag compound )
+    {
+        compound.putString( TAG_NAME_ID, this.id );
+        if( this.prefixId != null )
+            compound.putString( TAG_NAME_PREFIX, this.prefixId );
+        compound.putInt( TAG_NAME_DURABILITY_REMAINING, this.durabilityRemaining );
     }
 }

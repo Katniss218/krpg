@@ -18,7 +18,7 @@ public class RPGItemCommand implements TabExecutor
     @Override
     public boolean onCommand( @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args )
     {
-        if( args.length == 1 && args[0].equals( "sync" ) )
+        if( args.length >= 1 && args[0].equals( "sync" ) )
         {
             if( sender instanceof Player player )
             {
@@ -26,13 +26,30 @@ public class RPGItemCommand implements TabExecutor
                 inv.setItemInMainHand( RPGItemUtils.syncItem( inv.getItemInMainHand() ) );
             }
         }
-        if( args.length == 1 && args[0].equals( "get" ) )
+        if( args.length >= 1 && args[0].equals( "get" ) )
         {
             if( sender instanceof Player player )
             {
-                for( var id : RPGItemRegistry.getRegisteredIDs() )
+                if( args.length == 2 || args.length == 3 )
                 {
-                    player.sendMessage( id );
+                    String id = args[1];
+                    int amount = 1;
+                    if( args.length == 3 )
+                    {
+                        try
+                        {
+                            amount = Integer.parseInt( args[2] );
+                        }
+                        catch( Exception ex )
+                        {
+                        }
+                    }
+                    var def = RPGItemRegistry.get( id );
+                    if( def != null )
+                    {
+                        var item = RPGItemUtils.createItem( def, amount, null );
+                        player.getInventory().addItem( item );
+                    }
                 }
             }
         }
@@ -48,10 +65,10 @@ public class RPGItemCommand implements TabExecutor
             // completing first arg.
             return Arrays.asList( "get", "sync" );
         }
-        if( args.length <= 2 && args[1].equals( "get" ) )
+        if( args.length == 2 && args[0].equals( "get" ) )
         {
             return RPGItemRegistry.getRegisteredIDs();
         }
-        return null;
+        return new ArrayList<>();
     }
 }

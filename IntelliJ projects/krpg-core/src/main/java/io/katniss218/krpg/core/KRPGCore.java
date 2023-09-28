@@ -1,6 +1,7 @@
 package io.katniss218.krpg.core;
 
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import io.katniss218.krpg.core.definitions.RPGItemRegistry;
 import io.katniss218.krpg.core.definitions.RPGRarityRegistry;
@@ -12,6 +13,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,18 +24,31 @@ import static net.minecraft.commands.arguments.EntityArgument.players;
 
 public final class KRPGCore extends JavaPlugin implements Listener
 {
+    private static KRPGCore PLUGIN_INSTANCE;
+    private static Logger PLUGIN_LOGGER;
+
+    public static KRPGCore getPlugin()
+    {
+        return PLUGIN_INSTANCE;
+    }
+    public static Logger getPluginLogger()
+    {
+        return PLUGIN_LOGGER;
+    }
+
     public static void ReloadRegistries()
     {
-        // Order in which things are reloaded matters.
         RPGRarityRegistry.ReloadRarities();
-        RPGItemRegistry.ReloadItems(); // Items use rarities, they have to be reloaded prior.
-        //RPGLootTableRegistry.ReloadConfiguredLootTable(); // Loot tables use items.
-        //RPGEntityRegistry.ReloadConfiguredEntities(); // Entities use loot tables.
+        RPGItemRegistry.ReloadItems();
+        //RPGLootTableRegistry.ReloadConfiguredLootTable();
+        //RPGEntityRegistry.ReloadConfiguredEntities();
     }
 
     @Override
     public void onEnable()
     {
+        PLUGIN_INSTANCE = (KRPGCore)Bukkit.getServer().getPluginManager().getPlugin("ExamplePlugin");
+        PLUGIN_LOGGER = this.getLogger();
         this.saveDefaultConfig();
         ReloadRegistries();
 
