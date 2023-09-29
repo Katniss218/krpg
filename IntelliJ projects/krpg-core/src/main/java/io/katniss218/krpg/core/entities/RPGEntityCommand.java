@@ -1,7 +1,11 @@
-package io.katniss218.krpg.core.items;
+package io.katniss218.krpg.core.entities;
 
+import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
 import io.katniss218.krpg.core.definitions.RPGItemRegistry;
-import org.bukkit.command.*;
+import io.katniss218.krpg.core.items.RPGItemUtils;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,21 +14,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RPGItemCommand implements TabExecutor
+public class RPGEntityCommand implements TabExecutor
 {
 
     @Override
     public boolean onCommand( @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args )
     {
-        if( args.length >= 1 && args[0].equals( "sync" ) )
-        {
-            if( sender instanceof Player player )
-            {
-                var inv = player.getInventory();
-                inv.setItemInMainHand( RPGItemUtils.syncItemStack( inv.getItemInMainHand() ) );
-            }
-        }
-        if( args.length >= 1 && args[0].equals( "get" ) )
+        if( args.length >= 1 && args[0].equals( "spawn" ) )
         {
             if( sender instanceof Player player )
             {
@@ -42,11 +38,10 @@ public class RPGItemCommand implements TabExecutor
                         {
                         }
                     }
-                    var def = RPGItemRegistry.get( id );
+                    var def = RPGEntityRegistry.get( id );
                     if( def != null )
                     {
-                        var item = RPGItemUtils.createItemStack( def, amount, null );
-                        player.getInventory().addItem( item );
+                        var item = RPGEntityUtils.createEntity( def, player.getLocation(), amount, null );
                     }
                 }
             }
@@ -61,11 +56,11 @@ public class RPGItemCommand implements TabExecutor
         if( args.length <= 1 )
         {
             // completing first arg.
-            return Arrays.asList( "get", "sync" );
+            return Arrays.asList( "spawn" );
         }
-        if( args.length == 2 && args[0].equals( "get" ) )
+        if( args.length == 2 && args[0].equals( "spawn" ) )
         {
-            return RPGItemRegistry.getRegisteredIDs();
+            return RPGEntityRegistry.getRegisteredIDs();
         }
         return new ArrayList<>();
     }

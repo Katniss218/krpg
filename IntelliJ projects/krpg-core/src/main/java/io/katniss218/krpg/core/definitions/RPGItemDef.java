@@ -27,7 +27,7 @@ public class RPGItemDef
     public Integer modelData = null;
 
     @Range( from = 1, to = Integer.MAX_VALUE )
-    public int level; // required
+    public int level = 1;
 
     @Nonnull
     public RPGItemType type = RPGItemType.UNDEFINED; // required
@@ -66,11 +66,10 @@ public class RPGItemDef
      */
     public double value;
 
-    public RPGItemDef( @Nonnull String id, @Nonnull Material baseItem, @Range( from = 1, to = Integer.MAX_VALUE ) int level, @Nonnull RPGItemType type, @Nonnull String displayName )
+    public RPGItemDef( @Nonnull String id, @Nonnull Material baseItem, @Nonnull RPGItemType type, @Nonnull String displayName )
     {
         this.id = id;
         this.baseItem = baseItem;
-        this.level = level;
         this.type = type;
         this.displayName = displayName;
     }
@@ -80,14 +79,12 @@ public class RPGItemDef
     {
         String id = null;
         Material baseItem;
-        int level;
         RPGItemType type;
         String displayName;
         try
         {
             id = config.getName();
             baseItem = Material.matchMaterial( config.getString( "base" ) ); // todo - this very much sucks, we want to use minecraft's IDs.
-            level = config.getInt( "level" );
             type = RPGItemType.valueOf( config.getString( "type" ) );
             displayName = config.getString( "display.name" );
         }
@@ -98,8 +95,23 @@ public class RPGItemDef
             ex.printStackTrace( System.out );
             return null;
         }
+        if( baseItem == null || displayName == null )
+        {
+            return null;
+        }
 
-        RPGItemDef def = new RPGItemDef( id, baseItem, level, type, displayName );
+        RPGItemDef def = new RPGItemDef( id, baseItem, type, displayName );
+
+        if( config.contains( "level" ) )
+        {
+            try
+            {
+                def.level = config.getInt( "level" );
+            }
+            catch( Exception ex )
+            {
+            }
+        }
 
         if( config.contains( "rarity" ) )
         {
@@ -165,6 +177,26 @@ public class RPGItemDef
             }
         }
 
+        if( config.contains( "magical_damage" ) )
+        {
+            var configSection = config.getConfigurationSection( "magical_damage" );
+            for( final var key : configSection.getKeys( false ) )
+            {
+                try
+                {
+                    MagicalDamageType damageType = MagicalDamageType.valueOf( key );
+                    ModifierSet ms = ModifierSet.getModifierSet( configSection, key );
+                    if( ms != null )
+                    {
+                        def.magicalDamage.put( damageType, ms );
+                    }
+                }
+                catch( Exception ex )
+                {
+                }
+            }
+        }
+
         if( config.contains( "attack_speed" ) )
         {
             try
@@ -199,6 +231,26 @@ public class RPGItemDef
                     if( ms != null )
                     {
                         def.physicalArmor.put( damageType, ms );
+                    }
+                }
+                catch( Exception ex )
+                {
+                }
+            }
+        }
+
+        if( config.contains( "magical_armor" ) )
+        {
+            var configSection = config.getConfigurationSection( "magical_armor" );
+            for( final var key : configSection.getKeys( false ) )
+            {
+                try
+                {
+                    MagicalDamageType damageType = MagicalDamageType.valueOf( key );
+                    ModifierSet ms = ModifierSet.getModifierSet( configSection, key );
+                    if( ms != null )
+                    {
+                        def.magicalArmor.put( damageType, ms );
                     }
                 }
                 catch( Exception ex )

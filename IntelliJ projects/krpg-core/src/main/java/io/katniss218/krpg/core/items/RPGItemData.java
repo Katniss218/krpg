@@ -1,7 +1,6 @@
-package io.katniss218.krpg.core;
+package io.katniss218.krpg.core.items;
 
 import net.minecraft.nbt.CompoundTag;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Contract;
 
@@ -52,21 +51,6 @@ public class RPGItemData
         data.durabilityRemaining = compound.getInt( TAG_NAME_DURABILITY_REMAINING );
 
         return data;
-    }
-
-    @Contract(pure = false)
-    public void applyTo( @Nonnull ItemStack nmsItem )
-    {
-        var compound = nmsItem.getTag();
-
-        if( compound == null )
-        {
-            compound = new CompoundTag();
-        }
-
-        applyTo( compound );
-
-        nmsItem.setTag( compound );
     }
 
     @Contract(pure = false)

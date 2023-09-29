@@ -11,4 +11,6 @@ commands:
     usage: .
   rpgitem2:
     usage: .
+  rpgentity2:
+    usage: .
 api-version: 1.18

@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 import io.katniss218.krpg.core.definitions.RPGItemRegistry;
 import io.katniss218.krpg.core.definitions.RPGRarityRegistry;
+import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
+import io.katniss218.krpg.core.entities.RPGEntityCommand;
 import io.katniss218.krpg.core.items.RPGItemCommand;
 import io.katniss218.krpg.core.nbt.TestCommand;
 import net.minecraft.ChatFormatting;
@@ -40,14 +42,14 @@ public final class KRPGCore extends JavaPlugin implements Listener
     {
         RPGRarityRegistry.ReloadRarities();
         RPGItemRegistry.ReloadItems();
-        //RPGLootTableRegistry.ReloadConfiguredLootTable();
-        //RPGEntityRegistry.ReloadConfiguredEntities();
+        //RPGLootTableRegistry.ReloadLootTable();
+        RPGEntityRegistry.ReloadEntities();
     }
 
     @Override
     public void onEnable()
     {
-        PLUGIN_INSTANCE = (KRPGCore)Bukkit.getServer().getPluginManager().getPlugin("ExamplePlugin");
+        PLUGIN_INSTANCE = JavaPlugin.getPlugin( KRPGCore.class );
         PLUGIN_LOGGER = this.getLogger();
         this.saveDefaultConfig();
         ReloadRegistries();
@@ -57,5 +59,7 @@ public final class KRPGCore extends JavaPlugin implements Listener
         this.getCommand( "rpgtest" ).setExecutor( new TestCommand() );
         this.getCommand( "rpgitem2" ).setExecutor( new RPGItemCommand() );
         this.getCommand( "rpgitem2" ).setTabCompleter( new RPGItemCommand() );
+        this.getCommand( "rpgentity2" ).setExecutor( new RPGEntityCommand() );
+        this.getCommand( "rpgentity2" ).setTabCompleter( new RPGEntityCommand() );
     }
 }
