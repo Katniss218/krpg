@@ -31,6 +31,18 @@ public class RPGEntityDef
     public String nbt;
 
     // equipment
+    @Nullable
+    public EquipmentDef mainhand;
+    @Nullable
+    public EquipmentDef offhand;
+    @Nullable
+    public EquipmentDef head;
+    @Nullable
+    public EquipmentDef chest;
+    @Nullable
+    public EquipmentDef legs;
+    @Nullable
+    public EquipmentDef feet;
 
     public double maxHealth;
     @Nullable
@@ -74,7 +86,6 @@ public class RPGEntityDef
         }
         catch( Exception ex )
         {
-
             return null;
         }
         if( baseEntity == null || displayName == null || maxHealth <= 0 )
@@ -111,6 +122,85 @@ public class RPGEntityDef
             try
             {
                 def.nbt = config.getString( "nbt" );
+            }
+            catch( Exception ex )
+            {
+            }
+        }
+
+        if( config.contains( "display.mainhand" ) )
+        {
+            try
+            {
+                var eqSection = config.getConfigurationSection( "display.mainhand" );
+                Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
+                String nbt = eqSection.getString( "base" );
+                def.mainhand = new EquipmentDef( mat, nbt );
+            }
+            catch( Exception ex )
+            {
+            }
+        }
+        if( config.contains( "display.offhand" ) )
+        {
+            try
+            {
+                var eqSection = config.getConfigurationSection( "display.offhand" );
+                Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
+                String nbt = eqSection.getString( "base" );
+                def.offhand = new EquipmentDef( mat, nbt );
+            }
+            catch( Exception ex )
+            {
+            }
+        }
+        if( config.contains( "display.head" ) )
+        {
+            try
+            {
+                var eqSection = config.getConfigurationSection( "display.head" );
+                Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
+                String nbt = eqSection.getString( "base" );
+                def.head = new EquipmentDef( mat, nbt );
+            }
+            catch( Exception ex )
+            {
+            }
+        }
+        if( config.contains( "display.chest" ) )
+        {
+            try
+            {
+                var eqSection = config.getConfigurationSection( "display.chest" );
+                Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
+                String nbt = eqSection.getString( "base" );
+                def.chest = new EquipmentDef( mat, nbt );
+            }
+            catch( Exception ex )
+            {
+            }
+        }
+        if( config.contains( "display.legs" ) )
+        {
+            try
+            {
+                var eqSection = config.getConfigurationSection( "display.legs" );
+                Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
+                String nbt = eqSection.getString( "base" );
+                def.legs = new EquipmentDef( mat, nbt );
+            }
+            catch( Exception ex )
+            {
+            }
+        }
+        if( config.contains( "display.feet" ) )
+        {
+            try
+            {
+                var eqSection = config.getConfigurationSection( "display.feet" );
+                Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
+                String nbt = eqSection.getString( "base" );
+                def.feet = new EquipmentDef( mat, nbt );
             }
             catch( Exception ex )
             {

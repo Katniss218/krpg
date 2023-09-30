@@ -2,6 +2,7 @@ package io.katniss218.krpg.core.entities;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.katniss218.krpg.core.definitions.RPGEntityDef;
+import io.katniss218.krpg.core.items.ItemStackUtils;
 import io.katniss218.krpg.core.items.RPGItemData;
 import net.kyori.adventure.text.Component;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftEntityEquipment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -94,8 +96,33 @@ public final class RPGEntityUtils
         if( entity instanceof LivingEntity le )
         {
             var eq = le.getEquipment();
-            if( eq != null )
+            if( eq != null ) // should be not null always (?)
             {
+                if( def.mainhand != null )
+                {
+                    eq.setItemInMainHand( ItemStackUtils.createItemStack(def.mainhand.getMaterial(), 1, def.mainhand.getNbt() ) );
+                }
+                if( def.offhand != null )
+                {
+                    eq.setItemInOffHand( ItemStackUtils.createItemStack(def.offhand.getMaterial(), 1, def.offhand.getNbt() ) );
+                }
+                if( def.head != null )
+                {
+                    eq.setHelmet( ItemStackUtils.createItemStack(def.head.getMaterial(), 1, def.head.getNbt() ) );
+                }
+                if( def.chest != null )
+                {
+                    eq.setChestplate( ItemStackUtils.createItemStack(def.chest.getMaterial(), 1, def.chest.getNbt() ) );
+                }
+                if( def.legs != null )
+                {
+                    eq.setLeggings( ItemStackUtils.createItemStack(def.legs.getMaterial(), 1, def.legs.getNbt() ) );
+                }
+                if( def.feet != null )
+                {
+                    eq.setBoots( ItemStackUtils.createItemStack(def.feet.getMaterial(), 1, def.feet.getNbt() ) );
+                }
+
                 // set up helmet to not burn in the sun.
                 if( eq.getHelmet() == null )
                 {
