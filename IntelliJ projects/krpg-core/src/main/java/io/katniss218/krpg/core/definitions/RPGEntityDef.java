@@ -1,7 +1,6 @@
 package io.katniss218.krpg.core.definitions;
 
 import io.katniss218.krpg.core.MagicalDamageType;
-import io.katniss218.krpg.core.ModifierSet;
 import io.katniss218.krpg.core.PhysicalDamageType;
 import io.katniss218.krpg.core.entities.RPGEntityType;
 import org.bukkit.Material;
@@ -32,29 +31,28 @@ public class RPGEntityDef
 
     // equipment
     @Nullable
-    public EquipmentDef mainhand;
+    public RPGEntityEquipment mainhand;
     @Nullable
-    public EquipmentDef offhand;
+    public RPGEntityEquipment offhand;
     @Nullable
-    public EquipmentDef head;
+    public RPGEntityEquipment head;
     @Nullable
-    public EquipmentDef chest;
+    public RPGEntityEquipment chest;
     @Nullable
-    public EquipmentDef legs;
+    public RPGEntityEquipment legs;
     @Nullable
-    public EquipmentDef feet;
+    public RPGEntityEquipment feet;
 
     public double maxHealth;
-    @Nullable
-    public HashMap<PhysicalDamageType, Double> physicalDamage;
-    @Nullable
-    public HashMap<MagicalDamageType, Double> magicalDamage;
-    @Nullable
-    public Double critChance = 0.0;
-    @Nullable
-    public HashMap<PhysicalDamageType, Double> physicalArmor;
-    @Nullable
-    public HashMap<MagicalDamageType, Double> magicalArmor;
+    @Nonnull
+    public HashMap<PhysicalDamageType, Double> physicalDamage = new HashMap<>();
+    @Nonnull
+    public HashMap<MagicalDamageType, Double> magicalDamage = new HashMap<>();
+    public double critChance = 0.0;
+    @Nonnull
+    public HashMap<PhysicalDamageType, Double> physicalArmor = new HashMap<>();
+    @Nonnull
+    public HashMap<MagicalDamageType, Double> magicalArmor = new HashMap<>();
     public double aggroRange = 16.0;
     public double movementSpeed = 0.2;
     public double knockbackResistance = 0.0;
@@ -134,8 +132,8 @@ public class RPGEntityDef
             {
                 var eqSection = config.getConfigurationSection( "display.mainhand" );
                 Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
-                String nbt = eqSection.getString( "base" );
-                def.mainhand = new EquipmentDef( mat, nbt );
+                String nbt = eqSection.getString( "nbt" );
+                def.mainhand = new RPGEntityEquipment( mat, nbt );
             }
             catch( Exception ex )
             {
@@ -147,8 +145,8 @@ public class RPGEntityDef
             {
                 var eqSection = config.getConfigurationSection( "display.offhand" );
                 Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
-                String nbt = eqSection.getString( "base" );
-                def.offhand = new EquipmentDef( mat, nbt );
+                String nbt = eqSection.getString( "nbt" );
+                def.offhand = new RPGEntityEquipment( mat, nbt );
             }
             catch( Exception ex )
             {
@@ -160,8 +158,8 @@ public class RPGEntityDef
             {
                 var eqSection = config.getConfigurationSection( "display.head" );
                 Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
-                String nbt = eqSection.getString( "base" );
-                def.head = new EquipmentDef( mat, nbt );
+                String nbt = eqSection.getString( "nbt" );
+                def.head = new RPGEntityEquipment( mat, nbt );
             }
             catch( Exception ex )
             {
@@ -173,8 +171,8 @@ public class RPGEntityDef
             {
                 var eqSection = config.getConfigurationSection( "display.chest" );
                 Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
-                String nbt = eqSection.getString( "base" );
-                def.chest = new EquipmentDef( mat, nbt );
+                String nbt = eqSection.getString( "nbt" );
+                def.chest = new RPGEntityEquipment( mat, nbt );
             }
             catch( Exception ex )
             {
@@ -186,8 +184,8 @@ public class RPGEntityDef
             {
                 var eqSection = config.getConfigurationSection( "display.legs" );
                 Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
-                String nbt = eqSection.getString( "base" );
-                def.legs = new EquipmentDef( mat, nbt );
+                String nbt = eqSection.getString( "nbt" );
+                def.legs = new RPGEntityEquipment( mat, nbt );
             }
             catch( Exception ex )
             {
@@ -199,8 +197,8 @@ public class RPGEntityDef
             {
                 var eqSection = config.getConfigurationSection( "display.feet" );
                 Material mat = Material.matchMaterial( eqSection.getString( "base" ) );
-                String nbt = eqSection.getString( "base" );
-                def.feet = new EquipmentDef( mat, nbt );
+                String nbt = eqSection.getString( "nbt" );
+                def.feet = new RPGEntityEquipment( mat, nbt );
             }
             catch( Exception ex )
             {

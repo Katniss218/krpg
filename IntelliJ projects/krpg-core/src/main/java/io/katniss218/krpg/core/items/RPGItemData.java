@@ -2,6 +2,7 @@ package io.katniss218.krpg.core.items;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -28,6 +29,23 @@ public class RPGItemData
     public void setID( String id )
     {
         this.id = id;
+    }
+
+    @Nullable
+    public static RPGItemData getFrom( @Nullable org.bukkit.inventory.ItemStack item )
+    {
+        if( item == null )
+            return null;
+
+        var nmsItem = CraftItemStack.asNMSCopy( item );
+
+        var compound = nmsItem.getTag();
+        if( compound == null )
+        {
+            return null;
+        }
+
+        return getFrom(compound);
     }
 
     @Nullable

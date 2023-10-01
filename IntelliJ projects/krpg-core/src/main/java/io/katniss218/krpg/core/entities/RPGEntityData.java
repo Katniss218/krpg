@@ -8,6 +8,8 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
+import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -78,6 +80,16 @@ public class RPGEntityData
 
 
     @Nullable
+    public static RPGEntityData getFrom( @Nonnull Entity entity )
+    {
+        var nmsEntity = ((CraftEntity)entity).getHandle();
+
+        CompoundTag compound = new CompoundTag();
+        nmsEntity.save( compound );
+        return RPGEntityData.getFrom( compound );
+    }
+
+    @Nullable
     public static RPGEntityData getFrom( @Nonnull CompoundTag compound )
     {
         Tag tagsTag = compound.get( "Tags" );
@@ -98,7 +110,7 @@ public class RPGEntityData
 
         try
         {
-            return valueOf( str );
+            return RPGEntityData.valueOf( str );
         }
         catch( Exception ex )
         {
@@ -112,7 +124,7 @@ public class RPGEntityData
         String str = this.asString();
 
         ListTag listTags = new net.minecraft.nbt.ListTag();
-        listTags.add( StringTag.valueOf( id ) );
+        listTags.add( StringTag.valueOf( this.asString() ) );
         compound.put( "Tags", listTags );
     }
 

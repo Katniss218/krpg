@@ -21,7 +21,7 @@ public class RPGItemCommand implements TabExecutor
             if( sender instanceof Player player )
             {
                 var inv = player.getInventory();
-                inv.setItemInMainHand( RPGItemUtils.syncItemStack( inv.getItemInMainHand() ) );
+                inv.setItemInMainHand( RPGItemFactory.syncItemStack( inv.getItemInMainHand() ) );
             }
         }
         if( args.length >= 1 && args[0].equals( "get" ) )
@@ -45,7 +45,7 @@ public class RPGItemCommand implements TabExecutor
                     var def = RPGItemRegistry.get( id );
                     if( def != null )
                     {
-                        var item = RPGItemUtils.createItemStack( def, amount, null );
+                        var item = RPGItemFactory.createItemStack( def, amount, null );
                         player.getInventory().addItem( item );
                     }
                 }

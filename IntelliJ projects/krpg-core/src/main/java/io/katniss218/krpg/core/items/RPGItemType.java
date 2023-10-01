@@ -21,4 +21,32 @@ public enum RPGItemType
     {
         return new UUID( slotHash, 17 );
     }
+
+    public UUID getSlotUUID( int addend )
+    {
+        return new UUID( slotHash, 17 + addend );
+    }
+
+    /**
+     * Checks if the slot is eligible to increase the stats of the player.
+     * @param slot
+     * @param isPrimary Whether or not the stat being checked is primary or additional.
+     * @return
+     */
+    public boolean IsValid( EquipmentSlot slot, boolean isPrimary )
+    {
+        if( this == RPGItemType.ARMOR )
+        {
+            return slot == EquipmentSlot.HEAD
+                    || slot == EquipmentSlot.CHEST
+                    || slot == EquipmentSlot.LEGS
+                    || slot == EquipmentSlot.FEET;
+        }
+        if( this == RPGItemType.WEAPON )
+        {
+            return slot == EquipmentSlot.MAIN_HAND
+                    || slot == EquipmentSlot.OFF_HAND;
+        }
+        return false;
+    }
 }

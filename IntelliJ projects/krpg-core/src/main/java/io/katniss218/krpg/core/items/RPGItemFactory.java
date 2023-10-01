@@ -3,6 +3,7 @@ package io.katniss218.krpg.core.items;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.katniss218.krpg.core.definitions.RPGItemDef;
 import io.katniss218.krpg.core.definitions.RPGItemRegistry;
+import io.katniss218.krpg.core.nbt.AttributeUtils;
 import net.kyori.adventure.text.Component;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -18,8 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public final class RPGItemUtils
+/**
+ * This class is concerned with creating in-game item stacks from RPG item definitions and data.
+ */
+public final class RPGItemFactory
 {
+    /**
+     * Creates an item stack with the given amount and data.
+     *
+     * @param def    The RPG item definition to use as base of the item.
+     * @param amount The amount of the item in the created stack.
+     * @param data   The data structure to use for persistent data.
+     * @return The constructed item stack.
+     */
     @Nonnull
     @Contract( pure = true )
     public static ItemStack createItemStack( @Nonnull RPGItemDef def, int amount, @Nullable RPGItemData data )
@@ -63,7 +75,13 @@ public final class RPGItemUtils
             }
         }
         compound.putInt( "HideFlags", Integer.MAX_VALUE );
-        compound.put( "AttributeModifiers", getAttributeModifiers( def ) );
+        ListTag list = new ListTag();
+        if( def.attackSpeed != null )
+        {
+            double speed = def.attackSpeed.getPrimary() + def.attackSpeed.getAdditionalFlat();
+            list.add( AttributeUtils.createAttributeModifier( "generic.attack_speed", speed, 0, def.type.getSlotUUID() ) );
+        }
+        compound.put( "AttributeModifiers", list );
 
         data.applyTo( compound );
         nmsItemStack.setTag( compound );
@@ -100,22 +118,5 @@ public final class RPGItemUtils
         }
 
         return createItemStack( def, item.getAmount(), persistentData );
-    }
-
-    @Nonnull
-    private static ListTag getAttributeModifiers( RPGItemDef def )
-    {
-        ListTag attributesTag = new ListTag();
-        if( def.attackSpeed != null )
-        {
-            CompoundTag attributeTag = new CompoundTag();
-            attributeTag.putString( "AttributeName", "generic.attack_speed" );
-            attributeTag.putString( "AttributeName", "generic.attack_speed" );
-            attributeTag.putDouble( "Amount", def.attackSpeed.getPrimary() + def.attackSpeed.getAdditionalFlat() );
-            attributeTag.putInt( "Operation", 0 );
-            attributeTag.putUUID( "UUID", def.type.getSlotUUID() );
-            attributesTag.add( attributeTag );
-        }
-        return attributesTag;
     }
 }

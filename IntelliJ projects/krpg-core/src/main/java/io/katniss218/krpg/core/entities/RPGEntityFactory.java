@@ -3,17 +3,14 @@ package io.katniss218.krpg.core.entities;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.katniss218.krpg.core.definitions.RPGEntityDef;
 import io.katniss218.krpg.core.items.ItemStackUtils;
-import io.katniss218.krpg.core.items.RPGItemData;
+import io.katniss218.krpg.core.nbt.AttributeUtils;
 import net.kyori.adventure.text.Component;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftEntityEquipment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -23,9 +20,11 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.time.Instant;
-import java.util.Objects;
 
-public final class RPGEntityUtils
+/**
+ * This class is concerned with creating in-game entities from RPG entity definitions and data.
+ */
+public final class RPGEntityFactory
 {
     /**
      * Creates a new entity at a given location in the world, and with the given data.
@@ -53,12 +52,14 @@ public final class RPGEntityUtils
 
         var nmsEntity = ((CraftEntity)entity).getHandle();
 
-        var compound = new CompoundTag();
+        CompoundTag compound = new CompoundTag();
         nmsEntity.save( compound );
 
         // put default values here (e.g. zombies being adults by default, regardless of what is spawned by spawnEntity)
         compound.putBoolean( "IsVillager", false );
         compound.putBoolean( "IsBaby", false );
+        compound.putBoolean( "CanBreakDoors", false );
+        compound.putBoolean( "CanPickUpLoot", false );
         compound.put( "HandItems", new ListTag() );
         compound.put( "ArmorItems", new ListTag() );
         var handDropChances = new ListTag();
@@ -71,6 +72,7 @@ public final class RPGEntityUtils
         armorDropChances.add( FloatTag.valueOf( 0.0F ) );
         armorDropChances.add( FloatTag.valueOf( 0.0F ) );
         compound.put( "ArmorDropChances", armorDropChances );
+        compound.putBoolean( "PersistenceRequired", true );
 
         // user data
         if( def.nbt != null )
@@ -84,6 +86,15 @@ public final class RPGEntityUtils
             {
             }
         }
+
+        ListTag attributes = new ListTag();
+        attributes.add( AttributeUtils.createAttribute( "generic.max_health", def.maxHealth ) );
+        attributes.add( AttributeUtils.createAttribute( "generic.follow_range", def.aggroRange ) );
+        attributes.add( AttributeUtils.createAttribute( "generic.knockback_resistance", def.knockbackResistance ) );
+        attributes.add( AttributeUtils.createAttribute( "generic.movement_speed", def.movementSpeed ) );
+        attributes.add( AttributeUtils.createAttribute( "zombie.spawn_reinforcements", 0.0 ) );
+        compound.put( "Attributes", attributes );
+        compound.putFloat( "Health", (float)def.maxHealth );
 
         // after merging user data, replace the data that should always have a specific value.
         data.applyTo( compound );

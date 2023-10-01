@@ -54,6 +54,7 @@ public class RPGItemDef
     public ModifierSet maxHealth = null;
     @Nullable
     public ModifierSet movementSpeed = null;
+
     @Nullable
     public Double food = null;
     @Nullable

@@ -1,8 +1,6 @@
 package io.katniss218.krpg.core.entities;
 
 import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
-import io.katniss218.krpg.core.definitions.RPGItemRegistry;
-import io.katniss218.krpg.core.items.RPGItemUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -41,7 +39,7 @@ public class RPGEntityCommand implements TabExecutor
                     var def = RPGEntityRegistry.get( id );
                     if( def != null )
                     {
-                        var item = RPGEntityUtils.createEntity( def, player.getLocation(), amount, null );
+                        var item = RPGEntityFactory.createEntity( def, player.getLocation(), amount, null );
                     }
                 }
             }

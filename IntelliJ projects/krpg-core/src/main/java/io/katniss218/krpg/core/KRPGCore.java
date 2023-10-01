@@ -1,28 +1,17 @@
 package io.katniss218.krpg.core;
 
-import java.util.Collection;
 import java.util.logging.Logger;
 
+import io.katniss218.krpg.core.combat.EntityDamageByEntityListener;
+import io.katniss218.krpg.core.combat.EntityDamageListener;
 import io.katniss218.krpg.core.definitions.RPGItemRegistry;
 import io.katniss218.krpg.core.definitions.RPGRarityRegistry;
 import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
 import io.katniss218.krpg.core.entities.RPGEntityCommand;
 import io.katniss218.krpg.core.items.RPGItemCommand;
-import io.katniss218.krpg.core.nbt.TestCommand;
-import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.server.level.ServerPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
+import io.katniss218.krpg.core.items.durability.PlayerItemDamageListener;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import static net.minecraft.commands.Commands.argument;
-import static net.minecraft.commands.Commands.literal;
-import static net.minecraft.commands.arguments.EntityArgument.players;
 
 public final class KRPGCore extends JavaPlugin implements Listener
 {
@@ -46,6 +35,15 @@ public final class KRPGCore extends JavaPlugin implements Listener
         RPGEntityRegistry.ReloadEntities();
     }
 
+    void registerEventListeners(){
+
+        this.getServer().getPluginManager().registerEvents( this, this );
+        this.getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
+        this.getServer().getPluginManager().registerEvents(new EntityDamageByEntityListener(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerItemDamageListener(), this);
+
+    }
+
     @Override
     public void onEnable()
     {
@@ -54,9 +52,8 @@ public final class KRPGCore extends JavaPlugin implements Listener
         this.saveDefaultConfig();
         ReloadRegistries();
 
-        this.getServer().getPluginManager().registerEvents( this, this );
+        registerEventListeners();
 
-        this.getCommand( "rpgtest" ).setExecutor( new TestCommand() );
         this.getCommand( "rpgitem2" ).setExecutor( new RPGItemCommand() );
         this.getCommand( "rpgitem2" ).setTabCompleter( new RPGItemCommand() );
         this.getCommand( "rpgentity2" ).setExecutor( new RPGEntityCommand() );
