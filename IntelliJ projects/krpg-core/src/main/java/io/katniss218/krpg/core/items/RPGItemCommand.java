@@ -16,6 +16,10 @@ public class RPGItemCommand implements TabExecutor
     @Override
     public boolean onCommand( @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args )
     {
+        if( args.length >= 1 && args[0].equals( "reload" ) )
+        {
+            RPGItemRegistry.Reload();
+        }
         if( args.length >= 1 && args[0].equals( "sync" ) )
         {
             if( sender instanceof Player player )
@@ -61,7 +65,7 @@ public class RPGItemCommand implements TabExecutor
         if( args.length <= 1 )
         {
             // completing first arg.
-            return Arrays.asList( "get", "sync" );
+            return Arrays.asList( "get", "sync", "reload" );
         }
         if( args.length == 2 && args[0].equals( "get" ) )
         {

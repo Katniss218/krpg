@@ -8,20 +8,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class EntityDamageListener implements Listener
 {
-    private void MeleeHit()
-    {
-
-    }
-
-    private void Explode()
-    {
-
-    }
-
     @EventHandler
     public void onEntityDamage( EntityDamageEvent event )
     {
-        Bukkit.broadcast( Component.text("damaged entity: " + event.getEntity().getName() ) );
-        var cause = event.getCause();
+        //Bukkit.broadcast( Component.text("damaged entity: " + event.getEntity().getName() ) );
+        //var cause = event.getCause();
     }
 }

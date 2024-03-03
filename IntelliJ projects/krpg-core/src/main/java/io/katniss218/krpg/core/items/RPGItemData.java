@@ -1,5 +1,6 @@
 package io.katniss218.krpg.core.items;
 
+import io.katniss218.krpg.core.definitions.RPGItemDef;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
@@ -7,6 +8,7 @@ import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Specifies persistent data about an RPG item.
@@ -31,6 +33,16 @@ public class RPGItemData
         this.id = id;
     }
 
+    private RPGItemData()
+    {
+    }
+
+    public RPGItemData( RPGItemDef def )
+    {
+        id = def.id;
+        durabilityRemaining = Objects.requireNonNullElse( def.durability, Integer.MAX_VALUE );
+    }
+
     @Nullable
     public static RPGItemData getFrom( @Nullable org.bukkit.inventory.ItemStack item )
     {
@@ -45,7 +57,7 @@ public class RPGItemData
             return null;
         }
 
-        return getFrom(compound);
+        return getFrom( compound );
     }
 
     @Nullable
@@ -57,7 +69,7 @@ public class RPGItemData
             return null;
         }
 
-        return getFrom(compound);
+        return getFrom( compound );
     }
 
     @Nullable
@@ -71,7 +83,7 @@ public class RPGItemData
         return data;
     }
 
-    @Contract(pure = false)
+    @Contract( pure = false )
     public void applyTo( @Nonnull CompoundTag compound )
     {
         compound.putString( TAG_NAME_ID, this.id );

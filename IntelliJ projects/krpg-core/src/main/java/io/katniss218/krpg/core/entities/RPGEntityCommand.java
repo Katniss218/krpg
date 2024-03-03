@@ -18,6 +18,10 @@ public class RPGEntityCommand implements TabExecutor
     @Override
     public boolean onCommand( @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args )
     {
+        if( args.length >= 1 && args[0].equals( "reload" ) )
+        {
+            RPGEntityRegistry.Reload();
+        }
         if( args.length >= 1 && args[0].equals( "spawn" ) )
         {
             if( sender instanceof Player player )

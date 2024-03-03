@@ -11,8 +11,8 @@ public class RPGRarityDef
 {
     private String displayName;
 
-    private TextColor primaryColor;
-    private TextColor secondaryColor;
+    private String primaryColor;
+    private String secondaryColor;
 
     public String getDisplayName()
     {
@@ -24,22 +24,22 @@ public class RPGRarityDef
         this.displayName = displayName;
     }
 
-    public TextColor getPrimaryColor()
+    public String getPrimaryColor()
     {
         return primaryColor;
     }
 
-    public void setPrimaryColor( TextColor primaryColor )
+    public void setPrimaryColor( String primaryColor )
     {
         this.primaryColor = primaryColor;
     }
 
-    public TextColor getSecondaryColor()
+    public String getSecondaryColor()
     {
         return secondaryColor;
     }
 
-    public void setSecondaryColor( TextColor secondaryColor )
+    public void setSecondaryColor( String secondaryColor )
     {
         this.secondaryColor = secondaryColor;
     }
@@ -51,8 +51,8 @@ public class RPGRarityDef
         {
             RPGRarityDef rarity = new RPGRarityDef();
             rarity.setDisplayName( config.getString( "display.name" ) );
-            rarity.setPrimaryColor( TextColor.fromCSSHexString( config.getString( "display.primary_color" ) ) );
-            rarity.setSecondaryColor( TextColor.fromCSSHexString( config.getString( "display.secondary_color" ) ) );
+            rarity.setPrimaryColor( config.getString( "display.primary_color" ) );
+            rarity.setSecondaryColor( config.getString( "display.secondary_color" ) );
             return rarity;
         }
         catch( Exception ex )

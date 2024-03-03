@@ -2,11 +2,9 @@ package io.katniss218.krpg.core.definitions;
 
 import io.katniss218.krpg.core.FileUtils;
 import io.katniss218.krpg.core.KRPGCore;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -74,13 +72,20 @@ public class RPGItemRegistry
                 continue;
             }
 
-            RPGItemDef def = RPGItemDef.fromConfig( rpgItem );
-            if( def == null )
+            try
             {
-                continue;
-            }
+                RPGItemDef def = RPGItemDef.fromConfig( rpgItem );
+                if( def == null )
+                {
+                    continue;
+                }
 
-            items.put( def.id, def );
+                items.put( def.id, def );
+            }
+            catch( Exception ex )
+            {
+                //
+            }
         }
     }
 
@@ -106,7 +111,7 @@ public class RPGItemRegistry
         }
     }
 
-    public static void ReloadItems()
+    public static void Reload()
     {
         String dirPath = KRPGCore.getPlugin().getDataFolder() + File.separator + DEFS_DIRECTORY_NAME + File.separator + ITEMS_DIRECTORY_NAME;
 

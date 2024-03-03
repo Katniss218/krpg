@@ -58,7 +58,7 @@ public class RPGEntityDef
     public double knockbackResistance = 0.0;
 
     @Nullable
-    public String lootTable;
+    public String lootTableId;
 
     public RPGEntityDef( @Nonnull String id, @Nonnull EntityType baseEntity, @Nonnull String displayName, double maxHealth )
     {
@@ -320,7 +320,7 @@ public class RPGEntityDef
         {
             try
             {
-                def.lootTable = config.getString( "loot_table" );
+                def.lootTableId = config.getString( "loot_table" );
             }
             catch( Exception ex )
             {

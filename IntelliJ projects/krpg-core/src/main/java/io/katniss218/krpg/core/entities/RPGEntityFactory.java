@@ -4,6 +4,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.katniss218.krpg.core.definitions.RPGEntityDef;
 import io.katniss218.krpg.core.items.ItemStackUtils;
 import io.katniss218.krpg.core.nbt.AttributeUtils;
+import io.katniss218.krpg.core.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
@@ -102,7 +103,7 @@ public final class RPGEntityFactory
         nmsEntity.load( compound );
 
         // set up data that doesn't require nbt.
-        entity.customName( Component.text( "Lv." + def.level + " " + def.displayName ) ); // TODO - minimessage format colors
+        entity.customName( ColorUtils.GetComponent( "&a&lLv." + def.level + " &c&l" + def.displayName ) );
         entity.setPersistent( true );
         if( entity instanceof LivingEntity le )
         {
@@ -111,27 +112,27 @@ public final class RPGEntityFactory
             {
                 if( def.mainhand != null )
                 {
-                    eq.setItemInMainHand( ItemStackUtils.createItemStack(def.mainhand.getMaterial(), 1, def.mainhand.getNbt() ) );
+                    eq.setItemInMainHand( ItemStackUtils.createItemStack( def.mainhand.getMaterial(), 1, def.mainhand.getNbt() ) );
                 }
                 if( def.offhand != null )
                 {
-                    eq.setItemInOffHand( ItemStackUtils.createItemStack(def.offhand.getMaterial(), 1, def.offhand.getNbt() ) );
+                    eq.setItemInOffHand( ItemStackUtils.createItemStack( def.offhand.getMaterial(), 1, def.offhand.getNbt() ) );
                 }
                 if( def.head != null )
                 {
-                    eq.setHelmet( ItemStackUtils.createItemStack(def.head.getMaterial(), 1, def.head.getNbt() ) );
+                    eq.setHelmet( ItemStackUtils.createItemStack( def.head.getMaterial(), 1, def.head.getNbt() ) );
                 }
                 if( def.chest != null )
                 {
-                    eq.setChestplate( ItemStackUtils.createItemStack(def.chest.getMaterial(), 1, def.chest.getNbt() ) );
+                    eq.setChestplate( ItemStackUtils.createItemStack( def.chest.getMaterial(), 1, def.chest.getNbt() ) );
                 }
                 if( def.legs != null )
                 {
-                    eq.setLeggings( ItemStackUtils.createItemStack(def.legs.getMaterial(), 1, def.legs.getNbt() ) );
+                    eq.setLeggings( ItemStackUtils.createItemStack( def.legs.getMaterial(), 1, def.legs.getNbt() ) );
                 }
                 if( def.feet != null )
                 {
-                    eq.setBoots( ItemStackUtils.createItemStack(def.feet.getMaterial(), 1, def.feet.getNbt() ) );
+                    eq.setBoots( ItemStackUtils.createItemStack( def.feet.getMaterial(), 1, def.feet.getNbt() ) );
                 }
 
                 // set up helmet to not burn in the sun.

@@ -13,4 +13,6 @@ commands:
     usage: .
   rpgentity2:
     usage: .
+  rpgloottable2:
+    usage: .
 api-version: 1.18

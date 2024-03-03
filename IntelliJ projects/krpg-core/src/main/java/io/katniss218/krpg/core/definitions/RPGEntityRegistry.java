@@ -71,13 +71,20 @@ public class RPGEntityRegistry
                 continue;
             }
 
-            RPGEntityDef def = RPGEntityDef.fromConfig( rpgEntity );
-            if( def == null )
+            try
             {
-                continue;
-            }
+                RPGEntityDef def = RPGEntityDef.fromConfig( rpgEntity );
+                if( def == null )
+                {
+                    continue;
+                }
 
-            entities.put( def.id, def );
+                entities.put( def.id, def );
+            }
+            catch( Exception ex )
+            {
+                //
+            }
         }
     }
 
@@ -103,7 +110,7 @@ public class RPGEntityRegistry
         }
     }
 
-    public static void ReloadEntities()
+    public static void Reload()
     {
         String dirPath = KRPGCore.getPlugin().getDataFolder() + File.separator + DEFS_DIRECTORY_NAME + File.separator + ENTITIES_DIRECTORY_NAME;
 

@@ -29,8 +29,9 @@ public enum RPGItemType
 
     /**
      * Checks if the slot is eligible to increase the stats of the player.
+     *
      * @param slot
-     * @param isPrimary Whether or not the stat being checked is primary or additional.
+     * @param isPrimary Whether the stat being checked is primary or additional.
      * @return
      */
     public boolean IsValid( EquipmentSlot slot, boolean isPrimary )

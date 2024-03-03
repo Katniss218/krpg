@@ -12,7 +12,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -66,13 +65,20 @@ public class RPGRarityRegistry
                 continue;
             }
 
-            RPGRarityDef def = RPGRarityDef.fromConfig( rpgItem );
-            if( def == null )
+            try
             {
-                continue;
-            }
+                RPGRarityDef def = RPGRarityDef.fromConfig( rpgItem );
+                if( def == null )
+                {
+                    continue;
+                }
 
-            rarities.add( def );
+                rarities.add( def );
+            }
+            catch( Exception ex )
+            {
+                //
+            }
         }
     }
 
@@ -99,7 +105,7 @@ public class RPGRarityRegistry
     }
 
     // todo - do stuff.
-    public static void ReloadRarities()
+    public static void Reload()
     {
         KRPGCore plugin = JavaPlugin.getPlugin( KRPGCore.class );
         String dirPath = plugin.getDataFolder() + File.separator + DEFS_DIRECTORY_NAME + File.separator + ITEMS_DIRECTORY_NAME;
