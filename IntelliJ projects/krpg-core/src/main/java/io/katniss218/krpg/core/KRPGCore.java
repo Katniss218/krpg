@@ -14,6 +14,7 @@ import io.katniss218.krpg.core.entities.RPGEntityCommand;
 import io.katniss218.krpg.core.items.RPGItemCommand;
 import io.katniss218.krpg.core.items.durability.PlayerItemDamageListener;
 import io.katniss218.krpg.core.loottables.RPGLootTableCommand;
+import io.katniss218.krpg.core.spawners.RPGSpawnerCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -66,5 +67,16 @@ public final class KRPGCore extends JavaPlugin implements Listener
         this.getCommand( "rpgentity2" ).setTabCompleter( new RPGEntityCommand() );
         this.getCommand( "rpgloottable2" ).setExecutor( new RPGLootTableCommand() );
         this.getCommand( "rpgloottable2" ).setTabCompleter( new RPGLootTableCommand() );
+        this.getCommand( "rpgspawner2" ).setExecutor( new RPGSpawnerCommand() );
+        this.getCommand( "rpgspawner2" ).setTabCompleter( new RPGSpawnerCommand() );
+        /*DatabaseManager dbm = new DatabaseManager();
+        try
+        {
+            dbm.connect();
+        }
+        catch( Exception ex )
+        {
+            getPluginLogger().info( "ex " + ex.getMessage() );
+        }*/
     }
 }

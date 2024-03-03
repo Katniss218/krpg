@@ -7,12 +7,12 @@ authors:
   - Author
 prefix: KRPG-Core
 commands:
-  rpgtest:
-    usage: .
   rpgitem2:
     usage: .
   rpgentity2:
     usage: .
   rpgloottable2:
+    usage: .
+  rpgspawner2:
     usage: .
 api-version: 1.18
