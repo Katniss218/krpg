@@ -1,5 +1,6 @@
 package io.katniss218.krpg.core.items.durability;
 
+import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.definitions.RPGItemDef;
 import io.katniss218.krpg.core.items.RPGItemData;
 import io.katniss218.krpg.core.items.RPGItemFactory;
@@ -30,18 +31,26 @@ public class PlayerItemDamageListener implements Listener
             // sync
             var item2 = RPGItemFactory.syncItemStack( item, data );
 
-            if( inv.getItemInMainHand() == item )
+            if( inv.getItemInMainHand().equals( item ) )
+            {
                 inv.setItemInMainHand( item2 );
-            if( inv.getItemInOffHand() == item )
+            }
+            if( inv.getItemInOffHand().equals( item ) )
+            {
                 inv.setItemInOffHand( item2 );
+            }
 
-            if( inv.getHelmet() == item )
+            var helmet = inv.getHelmet();
+            if( helmet != null && helmet.equals( item ) )
                 inv.setHelmet( item2 );
-            if( inv.getChestplate() == item )
+            var chestplate = inv.getChestplate();
+            if( chestplate != null && chestplate.equals( item ) )
                 inv.setChestplate( item2 );
-            if( inv.getLeggings() == item )
+            var leggings = inv.getLeggings();
+            if( leggings != null && leggings.equals( item ) )
                 inv.setLeggings( item2 );
-            if( inv.getBoots() == item )
+            var boots = inv.getBoots();
+            if( boots != null && boots.equals( item ) )
                 inv.setBoots( item2 );
         }
     }

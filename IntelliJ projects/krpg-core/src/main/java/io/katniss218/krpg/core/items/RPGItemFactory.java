@@ -33,7 +33,7 @@ import java.util.Objects;
  */
 public final class RPGItemFactory
 {
-    private static final DecimalFormat decimalFormat = new DecimalFormat( "#.#" );
+    private static final DecimalFormat decimalFormat = new DecimalFormat( "#.##" );
 
     public static void AppendProperty( @Nonnull List<Component> loreLines, @Nonnull String displayName, @Nullable String displayType, double primary, double flat, double percent )
     {
@@ -72,15 +72,15 @@ public final class RPGItemFactory
             AppendProperty( loreLines, "Damage", prop.getKey().toString(),
                     prop.getValue().getPrimary(), prop.getValue().getAdditionalFlat(), prop.getValue().getAdditionalPercent() );
         }
-        if( def.critChance != null )
-        {
-            AppendProperty( loreLines, "Crit Chance", null,
-                    def.critChance.getPrimary(), def.critChance.getAdditionalFlat(), def.critChance.getAdditionalPercent() );
-        }
         if( def.attackSpeed != null )
         {
             AppendProperty( loreLines, "Attack Speed", null,
                     def.attackSpeed.getPrimary(), def.attackSpeed.getAdditionalFlat(), def.attackSpeed.getAdditionalPercent() );
+        }
+        if( def.critChance != null )
+        {
+            AppendProperty( loreLines, "Crit Chance", null,
+                    def.critChance.getPrimary(), def.critChance.getAdditionalFlat(), def.critChance.getAdditionalPercent() );
         }
 
         for( final var prop : def.physicalArmor.entrySet() )

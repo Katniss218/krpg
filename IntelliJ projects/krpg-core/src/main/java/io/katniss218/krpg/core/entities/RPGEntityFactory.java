@@ -104,6 +104,7 @@ public final class RPGEntityFactory
 
         // set up data that doesn't require nbt.
         entity.customName( ColorUtils.GetComponent( "&a&lLv." + def.level + " &c&l" + def.displayName ) );
+        entity.setCustomNameVisible( true );
         entity.setPersistent( true );
         if( entity instanceof LivingEntity le )
         {
