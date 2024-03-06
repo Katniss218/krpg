@@ -117,9 +117,6 @@ public final class KRPGCore extends JavaPlugin implements Listener
         ReloadRegistries();
         LoadDatabases();
 
-        new AutoSaveDatabases().runTaskTimer( this, 0, 600 );
-        new RPGSpawnerDatabase.Ticker().runTaskTimer( this, 0, 20 * 15 );
-
         registerEventListeners();
 
         this.getCommand( "rpgitem2" ).setExecutor( new RPGItemCommand() );
@@ -132,12 +129,29 @@ public final class KRPGCore extends JavaPlugin implements Listener
         this.getCommand( "rpgspawner2" ).setTabCompleter( new RPGSpawnerCommand() );
         this.getCommand( "xp" ).setExecutor( new XpCommand() );
         this.getCommand( "xp" ).setTabCompleter( new XpCommand() );
+
+        new AutoSaveDatabases().runTaskTimer( this, 0, 600 );
+
+        // This is important to be loaded a few ticks later,
+        // because multiverse core needs to load the world before we can load the spawner locations in that world.
+        new AutoLoadDatabases().runTaskLater( this, 2 );
+
+        new RPGSpawnerDatabase.Ticker().runTaskTimer( this, 5, 20 * 15 );
     }
 
     @Override
     public void onDisable()
     {
         SaveDatabases();
+    }
+
+    private static class AutoLoadDatabases extends BukkitRunnable
+    {
+        @Override
+        public void run()
+        {
+            KRPGCore.LoadDatabases();
+        }
     }
 
     private static class AutoSaveDatabases extends BukkitRunnable

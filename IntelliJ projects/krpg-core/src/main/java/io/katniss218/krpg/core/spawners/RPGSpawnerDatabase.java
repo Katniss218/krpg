@@ -201,6 +201,7 @@ public class RPGSpawnerDatabase
                 int maxCount = resultSet.getInt( "maxCount" );
 
                 RPGSpawnerData data = new RPGSpawnerData( id );
+                // FIXME - GetWorld is called before world is loaded.
                 data.setLocation( new Location( Bukkit.getWorld( worldName ), x, y, z, 0, 0 ) );
                 data.setEntityId( entityId );
                 data.setMinCount( minCount );
