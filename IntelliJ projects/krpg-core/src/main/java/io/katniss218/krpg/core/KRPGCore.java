@@ -13,10 +13,16 @@ import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
 import io.katniss218.krpg.core.entities.RPGEntityCommand;
 import io.katniss218.krpg.core.items.RPGItemCommand;
 import io.katniss218.krpg.core.items.durability.PlayerItemDamageListener;
+import io.katniss218.krpg.core.levels.XpCommand;
 import io.katniss218.krpg.core.loottables.RPGLootTableCommand;
+import io.katniss218.krpg.core.players.RPGPlayerDatabase;
 import io.katniss218.krpg.core.spawners.RPGSpawnerCommand;
+import io.katniss218.krpg.core.spawners.RPGSpawnerDatabase;
+import io.katniss218.krpg.core.utils.ColorUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public final class KRPGCore extends JavaPlugin implements Listener
 {
@@ -33,12 +39,63 @@ public final class KRPGCore extends JavaPlugin implements Listener
         return PLUGIN_LOGGER;
     }
 
+    private static String noPermissionMsg = "&cI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is an error.";
+
+    public static Component getNoPermissionMsg()
+    {
+        return ColorUtils.GetComponent( noPermissionMsg );
+    }
+
     public static void ReloadRegistries()
     {
         RPGRarityRegistry.Reload();
         RPGItemRegistry.Reload();
         RPGLootTableRegistry.Reload();
         RPGEntityRegistry.Reload();
+    }
+
+    public static void LoadDatabases()
+    {
+        getPluginLogger().info( "Loading databases..." );
+        try
+        {
+            RPGPlayerDatabase.LoadFromDatabase();
+        }
+        catch( Exception ex )
+        {
+            getPluginLogger().warning( "Couldn't load the player database: " + ex.getMessage() );
+        }
+
+        try
+        {
+            RPGSpawnerDatabase.LoadFromDatabase();
+        }
+        catch( Exception ex )
+        {
+            getPluginLogger().warning( "Couldn't load the spawner database: " + ex.getMessage() );
+        }
+    }
+
+    public static void SaveDatabases()
+    {
+        getPluginLogger().info( "Saving databases..." );
+        try
+        {
+            RPGPlayerDatabase.SaveToDatabase();
+        }
+        catch( Exception ex )
+        {
+            getPluginLogger().warning( "Couldn't save the player database. " + ex.getMessage() );
+        }
+
+        try
+        {
+            RPGSpawnerDatabase.SaveToDatabase();
+        }
+        catch( Exception ex )
+        {
+            getPluginLogger().warning( "Couldn't save the spawner database. " + ex.getMessage() );
+        }
     }
 
     void registerEventListeners()
@@ -58,6 +115,10 @@ public final class KRPGCore extends JavaPlugin implements Listener
         PLUGIN_LOGGER = this.getLogger();
         this.saveDefaultConfig();
         ReloadRegistries();
+        LoadDatabases();
+
+        new AutoSaveDatabases().runTaskTimer( this, 0, 600 );
+        new RPGSpawnerDatabase.Ticker().runTaskTimer( this, 0, 20 * 15 );
 
         registerEventListeners();
 
@@ -69,14 +130,22 @@ public final class KRPGCore extends JavaPlugin implements Listener
         this.getCommand( "rpgloottable2" ).setTabCompleter( new RPGLootTableCommand() );
         this.getCommand( "rpgspawner2" ).setExecutor( new RPGSpawnerCommand() );
         this.getCommand( "rpgspawner2" ).setTabCompleter( new RPGSpawnerCommand() );
-        /*DatabaseManager dbm = new DatabaseManager();
-        try
+        this.getCommand( "xp" ).setExecutor( new XpCommand() );
+        this.getCommand( "xp" ).setTabCompleter( new XpCommand() );
+    }
+
+    @Override
+    public void onDisable()
+    {
+        SaveDatabases();
+    }
+
+    private static class AutoSaveDatabases extends BukkitRunnable
+    {
+        @Override
+        public void run()
         {
-            dbm.connect();
+            KRPGCore.SaveDatabases();
         }
-        catch( Exception ex )
-        {
-            getPluginLogger().info( "ex " + ex.getMessage() );
-        }*/
     }
 }

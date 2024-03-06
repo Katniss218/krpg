@@ -1,6 +1,8 @@
 package io.katniss218.krpg.core.entities;
 
+import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
+import io.katniss218.krpg.core.utils.ColorUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -20,10 +22,20 @@ public class RPGEntityCommand implements TabExecutor
     {
         if( args.length >= 1 && args[0].equals( "reload" ) )
         {
+            if( !sender.hasPermission( "rpg." + command.getName() + ".reload" ))
+            {
+                sender.sendMessage( KRPGCore.getNoPermissionMsg() );
+                return true;
+            }
             RPGEntityRegistry.Reload();
         }
         if( args.length >= 1 && args[0].equals( "spawn" ) )
         {
+            if( !sender.hasPermission( "rpg." + command.getName() + ".spawn" ))
+            {
+                sender.sendMessage( KRPGCore.getNoPermissionMsg() );
+                return true;
+            }
             if( sender instanceof Player player )
             {
                 if( args.length == 2 || args.length == 3 )

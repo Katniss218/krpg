@@ -38,7 +38,7 @@ public final class RPGEntityFactory
      */
     @Nonnull
     @Contract( pure = true )
-    public static Entity createEntity( @Nonnull RPGEntityDef def, Location location, int count, @Nullable RPGEntityData data )
+    public static Entity createEntity( @Nonnull RPGEntityDef def, @Nonnull Location location, int count, @Nullable RPGEntityData data )
     {
         if( data == null )
         {

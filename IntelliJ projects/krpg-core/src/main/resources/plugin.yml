@@ -15,4 +15,6 @@ commands:
     usage: .
   rpgspawner2:
     usage: .
+  xp:
+    usage: .
 api-version: 1.18

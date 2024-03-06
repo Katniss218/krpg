@@ -139,10 +139,14 @@ public class Stats
         }
         if( def.attackSpeed != null )
         {
+            if( stats.attackSpeed == null )
+                stats.attackSpeed = 0.0;
             stats.attackSpeed += def.attackSpeed.getPrimary();
         }
         if( def.critChance != null )
         {
+            if( stats.critChance == null )
+                stats.critChance = 0.0;
             stats.critChance += def.critChance.getPrimary();
         }
         for( var key : def.physicalArmor.keySet() )
@@ -163,10 +167,14 @@ public class Stats
         }
         if( def.maxHealth != null )
         {
+            if( stats.maxHealth == null )
+                stats.maxHealth = 0.0;
             stats.maxHealth += def.maxHealth.getPrimary();
         }
         if( def.movementSpeed != null )
         {
+            if( stats.movementSpeed == null )
+                stats.movementSpeed = 0.0;
             stats.movementSpeed += def.movementSpeed.getPrimary();
         }
     }
@@ -208,10 +216,14 @@ public class Stats
         }
         if( def.attackSpeed != null )
         {
+            if( stats.attackSpeed == null )
+                stats.attackSpeed = 0.0;
             stats.attackSpeed += def.attackSpeed.getAdditionalFlat();
         }
         if( def.critChance != null )
         {
+            if( stats.critChance == null )
+                stats.critChance = 0.0;
             stats.critChance += def.critChance.getAdditionalFlat();
         }
         for( var key : def.physicalArmor.keySet() )
@@ -232,10 +244,14 @@ public class Stats
         }
         if( def.maxHealth != null )
         {
+            if( stats.maxHealth == null )
+                stats.maxHealth = 0.0;
             stats.maxHealth += def.maxHealth.getAdditionalFlat();
         }
         if( def.movementSpeed != null )
         {
+            if( stats.movementSpeed == null )
+                stats.movementSpeed = 0.0;
             stats.movementSpeed += def.movementSpeed.getAdditionalFlat();
         }
     }
@@ -282,10 +298,14 @@ public class Stats
         }
         if( def.attackSpeed != null )
         {
+            if( stats.attackSpeed == null )
+                stats.attackSpeed = 0.0;
             stats.attackSpeed += def.attackSpeed.getAdditionalPercent();
         }
         if( def.critChance != null )
         {
+            if( stats.critChance == null )
+                stats.critChance = 0.0;
             stats.critChance += def.critChance.getAdditionalPercent();
         }
         for( var key : def.physicalArmor.keySet() )
@@ -308,10 +328,14 @@ public class Stats
         }
         if( def.maxHealth != null )
         {
+            if( stats.maxHealth == null )
+                stats.maxHealth = 0.0;
             stats.maxHealth += def.maxHealth.getAdditionalPercent();
         }
         if( def.movementSpeed != null )
         {
+            if( stats.movementSpeed == null )
+                stats.movementSpeed = 0.0;
             stats.movementSpeed += def.movementSpeed.getAdditionalPercent();
         }
     }

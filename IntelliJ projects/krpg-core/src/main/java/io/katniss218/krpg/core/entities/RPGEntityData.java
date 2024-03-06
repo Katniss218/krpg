@@ -147,9 +147,9 @@ public class RPGEntityData
         data.id = split[1];
         data.spawnLocation = new Location(
                 Bukkit.getWorld( splitWorld[3] ),
-                Double.valueOf( splitWorld[0] ),
-                Double.valueOf( splitWorld[1] ),
-                Double.valueOf( splitWorld[2] ) );
+                Double.parseDouble( splitWorld[0] ),
+                Double.parseDouble( splitWorld[1] ),
+                Double.parseDouble( splitWorld[2] ) );
         data.spawnTime = Instant.parse( split[3] );
         data.health = Double.parseDouble( split[4] );
         return data;

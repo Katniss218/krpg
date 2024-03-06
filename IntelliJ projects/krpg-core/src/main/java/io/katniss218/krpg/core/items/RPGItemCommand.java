@@ -1,5 +1,6 @@
 package io.katniss218.krpg.core.items;
 
+import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.definitions.RPGItemRegistry;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -18,10 +19,20 @@ public class RPGItemCommand implements TabExecutor
     {
         if( args.length >= 1 && args[0].equals( "reload" ) )
         {
+            if( !sender.hasPermission( "rpg." + command.getName() + ".reload" ))
+            {
+                sender.sendMessage( KRPGCore.getNoPermissionMsg() );
+                return true;
+            }
             RPGItemRegistry.Reload();
         }
         if( args.length >= 1 && args[0].equals( "sync" ) )
         {
+            if( !sender.hasPermission( "rpg." + command.getName() + ".sync" ))
+            {
+                sender.sendMessage( KRPGCore.getNoPermissionMsg() );
+                return true;
+            }
             if( sender instanceof Player player )
             {
                 var inv = player.getInventory();
@@ -30,6 +41,11 @@ public class RPGItemCommand implements TabExecutor
         }
         if( args.length >= 1 && args[0].equals( "get" ) )
         {
+            if( !sender.hasPermission( "rpg." + command.getName() + ".get" ))
+            {
+                sender.sendMessage( KRPGCore.getNoPermissionMsg() );
+                return true;
+            }
             if( sender instanceof Player player )
             {
                 if( args.length == 2 || args.length == 3 )

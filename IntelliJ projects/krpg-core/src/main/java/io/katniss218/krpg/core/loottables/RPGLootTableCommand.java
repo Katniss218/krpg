@@ -1,9 +1,11 @@
 package io.katniss218.krpg.core.loottables;
 
+import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
 import io.katniss218.krpg.core.definitions.RPGLootTableDef;
 import io.katniss218.krpg.core.definitions.RPGLootTableRegistry;
 import io.katniss218.krpg.core.entities.RPGEntityFactory;
+import io.katniss218.krpg.core.utils.ColorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -23,10 +25,21 @@ public class RPGLootTableCommand implements TabExecutor
     {
         if( args.length >= 1 && args[0].equals( "reload" ) )
         {
+            if( !sender.hasPermission( "rpg." + command.getName() + ".reload" ))
+            {
+                sender.sendMessage( KRPGCore.getNoPermissionMsg() );
+                return true;
+            }
             RPGLootTableRegistry.Reload();
+            sender.sendMessage( ColorUtils.GetComponent( "&aReloaded all loot tables." ) );
         }
         if( args.length >= 1 && args[0].equals( "get" ) )
         {
+            if( !sender.hasPermission( "rpg." + command.getName() + ".get" ))
+            {
+                sender.sendMessage( KRPGCore.getNoPermissionMsg() );
+                return true;
+            }
             if( sender instanceof Player player )
             {
                 if( args.length == 2 )
@@ -36,12 +49,18 @@ public class RPGLootTableCommand implements TabExecutor
                     if( def != null )
                     {
                         LootTableDropper.GiveLootTable( def, player );
+                        player.sendMessage( ColorUtils.GetComponent( "&aGave loot table '" + id + "' to player " + player.getName() + "." ) );
                     }
                 }
             }
         }
         if( args.length >= 1 && args[0].equals( "give" ) )
         {
+            if( !sender.hasPermission( "rpg." + command.getName() + ".give" ))
+            {
+                sender.sendMessage( KRPGCore.getNoPermissionMsg() );
+                return true;
+            }
             if( sender instanceof Player player )
             {
                 if( args.length == 3 )
@@ -54,6 +73,7 @@ public class RPGLootTableCommand implements TabExecutor
                         if( def != null )
                         {
                             LootTableDropper.GiveLootTable( def, target );
+                            player.sendMessage( ColorUtils.GetComponent( "&aGave loot table '" + id + "' to player " + player.getName() + "." ) );
                         }
                     }
                 }
