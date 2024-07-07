@@ -3,6 +3,7 @@ package io.katniss218.krpg.core.spawners;
 import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
 import io.katniss218.krpg.core.definitions.RPGItemRegistry;
+import io.katniss218.krpg.core.definitions.RPGLootTableRegistry;
 import io.katniss218.krpg.core.utils.ColorUtils;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -99,7 +100,7 @@ public class RPGSpawnerCommand implements TabExecutor
         }
         if( args.length >= 1 && args[0].equals( "tick" ) )
         {
-            RPGSpawnerDatabase.tick();
+            RPGSpawnerTicker.tickAll();
         }
         if( args.length >= 1 && args[0].equals( "reload" ) )
         {
@@ -122,7 +123,11 @@ public class RPGSpawnerCommand implements TabExecutor
         if( args.length <= 1 )
         {
             // completing first arg.
-            return Arrays.asList( "list", "create", "modify", "remove", "tp" );
+            return Arrays.asList( "list", "create"/*, "modify"*/, "remove", "tp" );
+        }
+        if( args.length == 2 && args[0].equals( "create" ) )
+        {
+            return RPGEntityRegistry.getRegisteredIDs();
         }
         return new ArrayList<>();
     }

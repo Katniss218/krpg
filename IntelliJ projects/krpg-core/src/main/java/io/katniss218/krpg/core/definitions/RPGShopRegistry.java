@@ -14,73 +14,72 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class RPGItemRegistry
+public class RPGShopRegistry
 {
-    static HashMap<String, RPGItemDef> items = new HashMap<>();
+    static HashMap<String, RPGShopDef> shops = new HashMap<>();
 
     static final String DEFS_DIRECTORY_NAME = "defs";
-    static final String ITEMS_DIRECTORY_NAME = "rpgitems";
-    static final String CONFIG_NODE = "rpgitems";
+    static final String ENTITIES_DIRECTORY_NAME = "rpgshops";
+    static final String CONFIG_NODE = "rpgshops";
 
     @Nullable
-    public static RPGItemDef get( @Nonnull String id )
+    public static RPGShopDef get( @Nonnull String id )
     {
-        return items.get( id );
+        return shops.get( id );
     }
 
     public static List<String> getRegisteredIDs()
     {
-        ArrayList<String> list = new ArrayList<>( items.size() );
-        list.addAll( items.keySet() );
+        ArrayList<String> list = new ArrayList<>(shops.size());
+        list.addAll( shops.keySet() );
         return list;
     }
 
     /**
-     * Adds a item definition to the registry. The added definition is persisted across restarts, and can be removed later.
-     *
+     * Adds a shop definition to the registry. The added definition is persisted across restarts, and can be removed later.
      * @param def
      * @return
      */
-    public static boolean add( @Nonnull RPGItemDef def )
+    public static boolean add( @Nonnull RPGShopDef def )
     {
-        if( items.containsKey( def.id ) )
+        if( shops.containsKey( def.id ) )
         {
             return false;
         }
 
-        items.put( def.id, def );
+        shops.put( def.id, def );
         return true;
     }
 
-    static void LoadItemsFromYamlFile( File file )
+    static void LoadShopsFromYamlFile( File file )
     {
-        KRPGCore.getPluginLogger().info( "loading items from " + file.getPath() );
+        KRPGCore.getPluginLogger().info( "loading shops from " + file.getPath() );
         FileConfiguration config = YamlConfiguration.loadConfiguration( file );
 
-        ConfigurationSection rpgItems = config.getConfigurationSection( CONFIG_NODE );
-        if( rpgItems == null )
+        ConfigurationSection rpgShops = config.getConfigurationSection( CONFIG_NODE );
+        if( rpgShops == null )
         {
             return;
         }
 
-        Set<String> itemNodes = rpgItems.getKeys( false );
-        for( final var itemNode : itemNodes )
+        Set<String> shopNodes = rpgShops.getKeys( false );
+        for( final var shopNode : shopNodes )
         {
-            ConfigurationSection rpgItem = config.getConfigurationSection( CONFIG_NODE + "." + itemNode );
-            if( rpgItem == null )
+            ConfigurationSection rpgShop = config.getConfigurationSection( CONFIG_NODE + "." + shopNode );
+            if( rpgShop == null )
             {
                 continue;
             }
 
             try
             {
-                RPGItemDef def = RPGItemDef.fromConfig( rpgItem );
+                RPGShopDef def = RPGShopDef.fromConfig( rpgShop );
                 if( def == null )
                 {
                     continue;
                 }
 
-                items.put( def.id, def );
+                shops.put( def.id, def );
             }
             catch( Exception ex )
             {
@@ -106,16 +105,16 @@ public class RPGItemRegistry
             String ext = FileUtils.getExtension( file );
             if( ext != null && ext.equals( "yml" ) )
             {
-                LoadItemsFromYamlFile( file );
+                LoadShopsFromYamlFile( file );
             }
         }
     }
 
     public static void reload()
     {
-        String dirPath = KRPGCore.getPlugin().getDataFolder() + File.separator + DEFS_DIRECTORY_NAME + File.separator + ITEMS_DIRECTORY_NAME;
+        String dirPath = KRPGCore.getPlugin().getDataFolder() + File.separator + DEFS_DIRECTORY_NAME + File.separator + ENTITIES_DIRECTORY_NAME;
 
-        items.clear();
+        shops.clear();
         LoadItemsFromDirectoryRecursive( new File( dirPath ) );
     }
 }

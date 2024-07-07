@@ -78,13 +78,12 @@ public class RPGItemDef
     @Nullable
     public static RPGItemDef fromConfig( @Nonnull ConfigurationSection config )
     {
-        String id = null;
+        String id = config.getName();
         Material baseItem;
         RPGItemType type;
         String displayName;
         try
         {
-            id = config.getName();
             baseItem = Material.matchMaterial( config.getString( "base" ) ); // todo - this very much sucks, we want to use minecraft's IDs.
             type = RPGItemType.valueOf( config.getString( "type" ) );
             displayName = config.getString( "display.name" );
@@ -93,7 +92,6 @@ public class RPGItemDef
         {
             KRPGCore.getPluginLogger().warning( "Loading item definition failed. id: " + id );
             KRPGCore.getPluginLogger().info( ex.getMessage() );
-            ex.printStackTrace( System.out );
             return null;
         }
         if( baseItem == null || displayName == null )

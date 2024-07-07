@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Range;
 
 import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
@@ -60,7 +59,7 @@ public class LevelUtils
 
     private static final DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
-    public static void AddXp( @Nonnull Player player, double xp )
+    public static void addXp( @Nonnull Player player, double xp )
     {
         var data = RPGPlayerDatabase.getOrDefault( player );
         data.setXp( data.getXp() + xp );
@@ -101,7 +100,7 @@ public class LevelUtils
                 player.sendMessage( ColorUtils.GetComponent( "&a&lLevel up!" ) );
                 player.sendMessage( ColorUtils.GetComponent( "&aYou're now level " + data.getLevel() +"." ) );
             }
-            SyncPlayer( player, data.getXp(), data.getLevel() );
+            syncPlayer( player, data.getXp(), data.getLevel() );
         }
         else
         {
@@ -116,11 +115,11 @@ public class LevelUtils
                 player.sendMessage( ColorUtils.GetComponent( "&c&lLevel down." ) );
                 player.sendMessage( ColorUtils.GetComponent( "&cYou're now level " + data.getLevel() +"." ) );
             }
-            SyncPlayer( player, data.getXp(), data.getLevel() );
+            syncPlayer( player, data.getXp(), data.getLevel() );
         }
     }
 
-    private static void SyncPlayer( @Nonnull Player player, double xp, int level )
+    private static void syncPlayer( @Nonnull Player player, double xp, int level )
     {
         player.setLevel( level );
 

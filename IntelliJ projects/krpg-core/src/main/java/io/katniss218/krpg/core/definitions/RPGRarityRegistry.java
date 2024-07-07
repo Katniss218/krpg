@@ -105,7 +105,7 @@ public class RPGRarityRegistry
     }
 
     // todo - do stuff.
-    public static void Reload()
+    public static void reload()
     {
         KRPGCore plugin = JavaPlugin.getPlugin( KRPGCore.class );
         String dirPath = plugin.getDataFolder() + File.separator + DEFS_DIRECTORY_NAME + File.separator + ITEMS_DIRECTORY_NAME;

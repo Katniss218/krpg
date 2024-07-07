@@ -4,6 +4,7 @@ import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.definitions.RPGItemDef;
 import io.katniss218.krpg.core.items.RPGItemData;
 import io.katniss218.krpg.core.items.RPGItemFactory;
+import io.katniss218.krpg.core.items.SyncContext;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,7 +30,7 @@ public class PlayerItemDamageListener implements Listener
         else
         {
             // sync
-            var item2 = RPGItemFactory.syncItemStack( item, data );
+            var item2 = RPGItemFactory.syncItemStack( item, data, SyncContext.INVENTORY );
 
             if( inv.getItemInMainHand().equals( item ) )
             {

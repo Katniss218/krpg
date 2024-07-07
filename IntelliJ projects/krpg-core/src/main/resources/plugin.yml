@@ -15,6 +15,9 @@ commands:
     usage: .
   rpgspawner2:
     usage: .
+  rpgshop2:
+    usage: .
   xp:
     usage: .
 api-version: 1.18
+depend: [Vault]

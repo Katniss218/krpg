@@ -3,6 +3,7 @@ package io.katniss218.krpg.core.entities;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.katniss218.krpg.core.definitions.RPGEntityDef;
 import io.katniss218.krpg.core.items.ItemStackUtils;
+import io.katniss218.krpg.core.loottables.LootTableDropper;
 import io.katniss218.krpg.core.nbt.AttributeUtils;
 import io.katniss218.krpg.core.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
@@ -21,6 +22,8 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is concerned with creating in-game entities from RPG entity definitions and data.
@@ -37,8 +40,27 @@ public final class RPGEntityFactory
      * @return the spawned entity (root if multipart).
      */
     @Nonnull
-    @Contract( pure = true )
-    public static Entity createEntity( @Nonnull RPGEntityDef def, @Nonnull Location location, int count, @Nullable RPGEntityData data )
+    public static List<Entity> createEntities( @Nonnull RPGEntityDef def, @Nonnull Location location, int count, @Nullable RPGEntityData data )
+    {
+        List<Entity> spawnedEntities = new ArrayList<>(count);
+        for( int i = 0; i < count; i++ )
+        {
+            var entity = createEntity( def, location, data );
+            spawnedEntities.add( entity );
+        }
+        return spawnedEntities;
+    }
+
+    /**
+     * Creates a new entity at a given location in the world, and with the given data.
+     *
+     * @param def      the base definition of the entity.
+     * @param location the location where the entity should appear.
+     * @param data     additional data about the entity.
+     * @return the spawned entity (root if multipart).
+     */
+    @Nonnull
+    public static Entity createEntity( @Nonnull RPGEntityDef def, @Nonnull Location location, @Nullable RPGEntityData data )
     {
         if( data == null )
         {

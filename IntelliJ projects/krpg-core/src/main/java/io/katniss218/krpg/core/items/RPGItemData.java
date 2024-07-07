@@ -47,7 +47,9 @@ public class RPGItemData
     public static RPGItemData getFrom( @Nullable org.bukkit.inventory.ItemStack item )
     {
         if( item == null )
+        {
             return null;
+        }
 
         var nmsItem = CraftItemStack.asNMSCopy( item );
 
@@ -76,9 +78,21 @@ public class RPGItemData
     public static RPGItemData getFrom( @Nonnull CompoundTag compound )
     {
         RPGItemData data = new RPGItemData();
-        data.id = compound.getString( TAG_NAME_ID );
-        data.prefixId = compound.getString( TAG_NAME_PREFIX );
-        data.durabilityRemaining = compound.getInt( TAG_NAME_DURABILITY_REMAINING );
+
+        if( compound.contains( TAG_NAME_ID ) )
+        {
+            data.id = compound.getString( TAG_NAME_ID );
+        }
+
+        if( compound.contains( TAG_NAME_PREFIX ) )
+        {
+            data.prefixId = compound.getString( TAG_NAME_PREFIX );
+        }
+
+        if( compound.contains( TAG_NAME_DURABILITY_REMAINING ) )
+        {
+            data.durabilityRemaining = compound.getInt( TAG_NAME_DURABILITY_REMAINING );
+        }
 
         return data;
     }
@@ -86,9 +100,16 @@ public class RPGItemData
     @Contract( pure = false )
     public void applyTo( @Nonnull CompoundTag compound )
     {
-        compound.putString( TAG_NAME_ID, this.id );
+        if( this.id != null )
+        {
+            compound.putString( TAG_NAME_ID, this.id );
+        }
+
         if( this.prefixId != null )
+        {
             compound.putString( TAG_NAME_PREFIX, this.prefixId );
+        }
+
         compound.putInt( TAG_NAME_DURABILITY_REMAINING, this.durabilityRemaining );
     }
 }

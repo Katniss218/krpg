@@ -3,6 +3,7 @@ package io.katniss218.krpg.core.spawners;
 import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.definitions.RPGEntityDef;
 import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
+import io.katniss218.krpg.core.entities.RPGEntityData;
 import io.katniss218.krpg.core.entities.RPGEntityFactory;
 import io.katniss218.krpg.core.loottables.LootTableDropper;
 import io.katniss218.krpg.core.players.RPGPlayerData;
@@ -20,16 +21,6 @@ import java.util.*;
 
 public class RPGSpawnerDatabase
 {
-
-    public static class Ticker extends BukkitRunnable
-    {
-        @Override
-        public void run()
-        {
-            RPGSpawnerDatabase.tick();
-        }
-    }
-
     private final static String dbName = "spawnerdata.db";
 
     private static HashMap<Integer, RPGSpawnerData> spawners = new HashMap<>();
@@ -76,67 +67,6 @@ public class RPGSpawnerDatabase
         if( spawner != null )
             return spawners.remove( spawner.getId() ) != null;
         return false;
-    }
-
-    public static void tick()
-    {
-        final var onlinePlayers = Bukkit.getOnlinePlayers();
-
-        for( final var spawner : spawners.values() )
-        {
-            if( !spawner.getLocation().isChunkLoaded() )
-                continue;
-
-            KRPGCore.getPluginLogger().info( "A" );
-
-            boolean inRange = false;
-            for( final var player : onlinePlayers )
-            {
-                if( player.getLocation().distance( spawner.getLocation() ) < 80 )
-                {
-                    inRange = true;
-                    break;
-                }
-            }
-
-            if( inRange )
-            {
-                KRPGCore.getPluginLogger().info( "B" );
-                final var entities = spawner.getLocation().getNearbyEntities( 24, 24, 24 );
-
-                boolean rpgEntityInRange = false;
-                for( final var entity : entities )
-                {
-                    if( entity instanceof org.bukkit.entity.Item )
-                        continue;
-                    if( entity instanceof org.bukkit.entity.Arrow )
-                        continue;
-                    if( entity instanceof org.bukkit.entity.Painting )
-                        continue;
-                    if( entity instanceof org.bukkit.entity.ItemFrame )
-                        continue;
-                    if( entity instanceof org.bukkit.entity.ArmorStand )
-                        continue;
-                    if( entity instanceof org.bukkit.entity.Boat )
-                        continue;
-
-                    rpgEntityInRange = true;
-                    break;
-                }
-
-                if( !rpgEntityInRange )
-                {
-                    KRPGCore.getPluginLogger().info( "C" );
-                    RPGEntityDef def = RPGEntityRegistry.get( spawner.getEntityId() );
-                    KRPGCore.getPluginLogger().info( spawner.getEntityId() );
-                    if( def != null )
-                    {
-                        KRPGCore.getPluginLogger().info( "D" );
-                        var entity = RPGEntityFactory.createEntity( def, spawner.getLocation(), LootTableDropper.randomRange( spawner.getMinCount(), spawner.getMaxCount() + 1 ), null );
-                    }
-                }
-            }
-        }
     }
 
     public static void SaveToDatabase() throws ClassNotFoundException, SQLException

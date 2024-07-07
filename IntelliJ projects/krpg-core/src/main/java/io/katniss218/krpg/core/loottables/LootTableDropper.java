@@ -1,12 +1,12 @@
 package io.katniss218.krpg.core.loottables;
 
-import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.definitions.RPGItemDef;
 import io.katniss218.krpg.core.definitions.RPGItemRegistry;
 import io.katniss218.krpg.core.definitions.RPGLootTableDef;
-import io.katniss218.krpg.core.items.RPGItemData;
 import io.katniss218.krpg.core.items.RPGItemFactory;
+import io.katniss218.krpg.core.items.SyncContext;
 import io.katniss218.krpg.core.levels.LevelUtils;
+import io.katniss218.krpg.core.money.MoneyUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -43,8 +43,15 @@ public class LootTableDropper
                         if( itemDef == null )
                             continue;
 
-                        var itemstack = RPGItemFactory.createItemStack( itemDef, randomRange( item.min, item.max + 1 ), null );
-                        location.getWorld().dropItem( location, itemstack );
+                        int countRemaining = randomRange( item.min, item.max + 1 );
+                        while( countRemaining > 0 )
+                        {
+                            var countToAdd = Math.min( countRemaining, itemDef.baseItem.getMaxStackSize() );
+
+                            var itemstack = RPGItemFactory.createItemStack( itemDef, countToAdd, null, SyncContext.INVENTORY );
+                            location.getWorld().dropItem( location, itemstack );
+                            countRemaining -= countToAdd;
+                        }
                     }
                 }
             }
@@ -53,11 +60,11 @@ public class LootTableDropper
         {
             if( def.xp != null )
             {
-                LevelUtils.AddXp( player, randomRange( def.xp.min, def.xp.max ) );
+                LevelUtils.addXp( player, randomRange( def.xp.min, def.xp.max ) );
             }
             if( def.money != null )
             {
-                // hook into Vault economy to add money.
+                MoneyUtils.addMoney( player, randomRange( def.money.min, def.money.max ) );
             }
         }
     }
@@ -78,19 +85,26 @@ public class LootTableDropper
                     if( itemDef == null )
                         continue;
 
-                    var itemstack = RPGItemFactory.createItemStack( itemDef, randomRange( item.min, item.max + 1 ), null );
-                    player.getInventory().addItem( itemstack );
+                    int countRemaining = randomRange( item.min, item.max + 1 );
+                    while( countRemaining > 0 )
+                    {
+                        var countToAdd = Math.min( countRemaining, itemDef.baseItem.getMaxStackSize() );
+
+                        var itemstack = RPGItemFactory.createItemStack( itemDef, countToAdd, null, SyncContext.INVENTORY );
+                        player.getInventory().addItem( itemstack );
+                        countRemaining -= countToAdd;
+                    }
                 }
             }
         }
 
         if( def.xp != null )
         {
-            LevelUtils.AddXp( player, randomRange( def.xp.min, def.xp.max ) );
+            LevelUtils.addXp( player, randomRange( def.xp.min, def.xp.max ) );
         }
         if( def.money != null )
         {
-            // hook into Vault economy to add money.
+            MoneyUtils.addMoney( player, randomRange( def.money.min, def.money.max ) );
         }
     }
 }

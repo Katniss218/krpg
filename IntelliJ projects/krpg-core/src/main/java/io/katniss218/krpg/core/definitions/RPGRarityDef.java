@@ -1,5 +1,6 @@
 package io.katniss218.krpg.core.definitions;
 
+import io.katniss218.krpg.core.KRPGCore;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -57,7 +58,7 @@ public class RPGRarityDef
         }
         catch( Exception ex )
         {
-            Bukkit.getLogger().warning( "Loading rarity definition failed: " + config.getCurrentPath() );
+            KRPGCore.getPluginLogger().warning( "Loading rarity definition failed: " + config.getCurrentPath() );
             return null;
         }
     }

@@ -2,7 +2,6 @@ package io.katniss218.krpg.core.entities;
 
 import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
-import io.katniss218.krpg.core.utils.ColorUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -27,7 +26,7 @@ public class RPGEntityCommand implements TabExecutor
                 sender.sendMessage( KRPGCore.getNoPermissionMsg() );
                 return true;
             }
-            RPGEntityRegistry.Reload();
+            RPGEntityRegistry.reload();
         }
         if( args.length >= 1 && args[0].equals( "spawn" ) )
         {
@@ -55,7 +54,7 @@ public class RPGEntityCommand implements TabExecutor
                     var def = RPGEntityRegistry.get( id );
                     if( def != null )
                     {
-                        var item = RPGEntityFactory.createEntity( def, player.getLocation(), amount, null );
+                        var item = RPGEntityFactory.createEntities( def, player.getLocation(), amount, null );
                     }
                 }
             }

@@ -46,7 +46,9 @@ public class RPGLootTableDef
     @Nullable
     public static RPGLootTableDef fromConfig( @Nonnull ConfigurationSection config )
     {
-        RPGLootTableDef def = new RPGLootTableDef( config.getName() );
+        String id = config.getName();
+
+        RPGLootTableDef def = new RPGLootTableDef( id );
 
         List<String> items = config.getStringList( "items" );
         def.items = new ArrayList<ItemEntry>( items.size() );

@@ -15,15 +15,22 @@ java {
   // Configure the java toolchain. This allows gradle to auto-provision JDK 17 on systems that only have JDK 8 installed for example.
   toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
+repositories {
+  mavenCentral()
+  maven("https://papermc.io/repo/repository/maven-public/")
+  maven("https://jitpack.io")
+}
 
 dependencies {
   paperDevBundle("1.18.2-R0.1-SNAPSHOT")
-  // paperweightDevBundle("com.example.paperfork", "1.18.2-R0.1-SNAPSHOT")
-
-  // You will need to manually specify the full dependency if using the groovy gradle dsl
-  // (paperDevBundle and paperweightDevBundle functions do not work in groovy)
-  // paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.18.2-R0.1-SNAPSHOT")
+  compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
+  compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 }
+// paperweightDevBundle("com.example.paperfork", "1.18.2-R0.1-SNAPSHOT")
+
+// You will need to manually specify the full dependency if using the groovy gradle dsl
+// (paperDevBundle and paperweightDevBundle functions do not work in groovy)
+// paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.18.2-R0.1-SNAPSHOT")
 
 tasks {
   // Configure reobfJar to run when invoking the build task

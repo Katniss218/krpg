@@ -2,27 +2,36 @@ package io.katniss218.krpg.core;
 
 import java.util.logging.Logger;
 
+import io.katniss218.krpg.core.chat.AsyncChatListener;
 import io.katniss218.krpg.core.combat.EntityDamageByEntityListener;
 import io.katniss218.krpg.core.combat.EntityDamageListener;
 import io.katniss218.krpg.core.combat.EntityDeathListener;
 import io.katniss218.krpg.core.combat.PlayerItemConsumeListener;
-import io.katniss218.krpg.core.definitions.RPGItemRegistry;
-import io.katniss218.krpg.core.definitions.RPGLootTableRegistry;
-import io.katniss218.krpg.core.definitions.RPGRarityRegistry;
-import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
+import io.katniss218.krpg.core.definitions.*;
 import io.katniss218.krpg.core.entities.RPGEntityCommand;
+import io.katniss218.krpg.core.entities.RPGEntityTicker;
+import io.katniss218.krpg.core.items.PlayerJoinListener;
 import io.katniss218.krpg.core.items.RPGItemCommand;
 import io.katniss218.krpg.core.items.durability.PlayerItemDamageListener;
 import io.katniss218.krpg.core.levels.XpCommand;
 import io.katniss218.krpg.core.loottables.RPGLootTableCommand;
 import io.katniss218.krpg.core.players.RPGPlayerDatabase;
+import io.katniss218.krpg.core.shops.InventoryCloseListener;
+import io.katniss218.krpg.core.shops.PlayerInteractEntityListener;
+import io.katniss218.krpg.core.shops.RPGShopCommend;
+import io.katniss218.krpg.core.shops.InventoryClickListener;
 import io.katniss218.krpg.core.spawners.RPGSpawnerCommand;
 import io.katniss218.krpg.core.spawners.RPGSpawnerDatabase;
+import io.katniss218.krpg.core.spawners.RPGSpawnerTicker;
 import io.katniss218.krpg.core.utils.ColorUtils;
+import io.katniss218.krpg.core.utils.NoTrampleListener;
 import net.kyori.adventure.text.Component;
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import net.milkbowl.vault.economy.Economy;
 
 public final class KRPGCore extends JavaPlugin implements Listener
 {
@@ -48,10 +57,11 @@ public final class KRPGCore extends JavaPlugin implements Listener
 
     public static void ReloadRegistries()
     {
-        RPGRarityRegistry.Reload();
-        RPGItemRegistry.Reload();
-        RPGLootTableRegistry.Reload();
-        RPGEntityRegistry.Reload();
+        RPGRarityRegistry.reload();
+        RPGItemRegistry.reload();
+        RPGLootTableRegistry.reload();
+        RPGEntityRegistry.reload();
+        RPGShopRegistry.reload();
     }
 
     public static void LoadDatabases()
@@ -98,14 +108,86 @@ public final class KRPGCore extends JavaPlugin implements Listener
         }
     }
 
+    private static Economy vaultEconomy = null;
+    private static Chat vaultChat = null;
+
+    private boolean setupVault()
+    {
+        if( getServer().getPluginManager().getPlugin( "Vault" ) == null )
+        {
+            return false;
+        }
+
+        RegisteredServiceProvider<Economy> rspEco = getServer().getServicesManager().getRegistration( Economy.class );
+        if( rspEco == null )
+        {
+            return false;
+        }
+        vaultEconomy = rspEco.getProvider();
+
+        RegisteredServiceProvider<Chat> rspChat = getServer().getServicesManager().getRegistration( Chat.class );
+        if( rspChat == null )
+        {
+            return false;
+        }
+        vaultChat = rspChat.getProvider();
+
+        return true;
+    }
+
+    void setupDependencies()
+    {
+        if( !setupVault() )
+        {
+            getLogger().severe( "Disabled due to no Vault dependency found!" );
+            getServer().getPluginManager().disablePlugin( this );
+        }
+    }
+
     void registerEventListeners()
     {
         this.getServer().getPluginManager().registerEvents( this, this );
+        this.getServer().getPluginManager().registerEvents( new PlayerJoinListener(), this );
+        this.getServer().getPluginManager().registerEvents( new InventoryClickListener(), this );
+        this.getServer().getPluginManager().registerEvents( new InventoryCloseListener(), this );
+        this.getServer().getPluginManager().registerEvents( new PlayerInteractEntityListener(), this );
         this.getServer().getPluginManager().registerEvents( new EntityDamageListener(), this );
         this.getServer().getPluginManager().registerEvents( new EntityDamageByEntityListener(), this );
         this.getServer().getPluginManager().registerEvents( new EntityDeathListener(), this );
         this.getServer().getPluginManager().registerEvents( new PlayerItemDamageListener(), this );
         this.getServer().getPluginManager().registerEvents( new PlayerItemConsumeListener(), this );
+        this.getServer().getPluginManager().registerEvents( new NoTrampleListener(), this );
+        this.getServer().getPluginManager().registerEvents( new AsyncChatListener(), this );
+    }
+
+    void registerCommands()
+    {
+        this.getCommand( "rpgitem2" ).setExecutor( new RPGItemCommand() );
+        this.getCommand( "rpgitem2" ).setTabCompleter( new RPGItemCommand() );
+
+        this.getCommand( "rpgentity2" ).setExecutor( new RPGEntityCommand() );
+        this.getCommand( "rpgentity2" ).setTabCompleter( new RPGEntityCommand() );
+
+        this.getCommand( "rpgloottable2" ).setExecutor( new RPGLootTableCommand() );
+        this.getCommand( "rpgloottable2" ).setTabCompleter( new RPGLootTableCommand() );
+
+        this.getCommand( "rpgspawner2" ).setExecutor( new RPGSpawnerCommand() );
+        this.getCommand( "rpgspawner2" ).setTabCompleter( new RPGSpawnerCommand() );
+
+        this.getCommand( "rpgshop2" ).setExecutor( new RPGShopCommend() );
+        this.getCommand( "rpgshop2" ).setTabCompleter( new RPGShopCommend() );
+
+        this.getCommand( "xp" ).setExecutor( new XpCommand() );
+        this.getCommand( "xp" ).setTabCompleter( new XpCommand() );
+    }
+
+    public static Economy getVaultEconomy()
+    {
+        return vaultEconomy;
+    }
+    public static Chat getVaultChat()
+    {
+        return vaultChat;
     }
 
     @Override
@@ -113,22 +195,13 @@ public final class KRPGCore extends JavaPlugin implements Listener
     {
         PLUGIN_INSTANCE = JavaPlugin.getPlugin( KRPGCore.class );
         PLUGIN_LOGGER = this.getLogger();
+        this.setupDependencies();
         this.saveDefaultConfig();
         ReloadRegistries();
         LoadDatabases();
 
         registerEventListeners();
-
-        this.getCommand( "rpgitem2" ).setExecutor( new RPGItemCommand() );
-        this.getCommand( "rpgitem2" ).setTabCompleter( new RPGItemCommand() );
-        this.getCommand( "rpgentity2" ).setExecutor( new RPGEntityCommand() );
-        this.getCommand( "rpgentity2" ).setTabCompleter( new RPGEntityCommand() );
-        this.getCommand( "rpgloottable2" ).setExecutor( new RPGLootTableCommand() );
-        this.getCommand( "rpgloottable2" ).setTabCompleter( new RPGLootTableCommand() );
-        this.getCommand( "rpgspawner2" ).setExecutor( new RPGSpawnerCommand() );
-        this.getCommand( "rpgspawner2" ).setTabCompleter( new RPGSpawnerCommand() );
-        this.getCommand( "xp" ).setExecutor( new XpCommand() );
-        this.getCommand( "xp" ).setTabCompleter( new XpCommand() );
+        registerCommands();
 
         new AutoSaveDatabases().runTaskTimer( this, 0, 600 );
 
@@ -136,7 +209,8 @@ public final class KRPGCore extends JavaPlugin implements Listener
         // because multiverse core needs to load the world before we can load the spawner locations in that world.
         new AutoLoadDatabases().runTaskLater( this, 2 );
 
-        new RPGSpawnerDatabase.Ticker().runTaskTimer( this, 5, 20 * 15 );
+        new RPGSpawnerTicker.Ticker().runTaskTimer( this, 5, 20 * 15 );
+        new RPGEntityTicker.Ticker().runTaskTimer( this, 5, 20 * 17 );
     }
 
     @Override

@@ -94,7 +94,7 @@ public class RPGLootTableRegistry
         }
     }
 
-    public static void Reload()
+    public static void reload()
     {
         String dirPath = KRPGCore.getPlugin().getDataFolder() + File.separator + DEFS_DIRECTORY_NAME + File.separator + ENTITIES_DIRECTORY_NAME;
 

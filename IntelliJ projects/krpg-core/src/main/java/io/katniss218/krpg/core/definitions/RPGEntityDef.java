@@ -1,8 +1,10 @@
 package io.katniss218.krpg.core.definitions;
 
+import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.MagicalDamageType;
 import io.katniss218.krpg.core.PhysicalDamageType;
 import io.katniss218.krpg.core.entities.RPGEntityType;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
@@ -71,19 +73,20 @@ public class RPGEntityDef
     @Nullable
     public static RPGEntityDef fromConfig( @Nonnull ConfigurationSection config )
     {
-        String id;
+        String id = config.getName();
         EntityType baseEntity;
         double maxHealth;
         String displayName;
         try
         {
-            id = config.getName();
             baseEntity = EntityType.fromName( config.getString( "base" ) ); // no good way to map these. maybe create a custom map?
             maxHealth = config.getDouble( "max_health" );
             displayName = config.getString( "display.name" );
         }
         catch( Exception ex )
         {
+            KRPGCore.getPluginLogger().warning( "Loading entity definition failed. id: " + id );
+            KRPGCore.getPluginLogger().info( ex.getMessage() );
             return null;
         }
         if( baseEntity == null || displayName == null || maxHealth <= 0 )

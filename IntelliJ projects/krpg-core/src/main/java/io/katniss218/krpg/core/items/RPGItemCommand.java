@@ -24,7 +24,8 @@ public class RPGItemCommand implements TabExecutor
                 sender.sendMessage( KRPGCore.getNoPermissionMsg() );
                 return true;
             }
-            RPGItemRegistry.Reload();
+            RPGItemRegistry.reload();
+            return true;
         }
         if( args.length >= 1 && args[0].equals( "sync" ) )
         {
@@ -36,8 +37,9 @@ public class RPGItemCommand implements TabExecutor
             if( sender instanceof Player player )
             {
                 var inv = player.getInventory();
-                inv.setItemInMainHand( RPGItemFactory.syncItemStack( inv.getItemInMainHand() ) );
+                RPGItemFactory.syncInventory( inv, SyncContext.INVENTORY );
             }
+            return true;
         }
         if( args.length >= 1 && args[0].equals( "get" ) )
         {
@@ -65,11 +67,12 @@ public class RPGItemCommand implements TabExecutor
                     var def = RPGItemRegistry.get( id );
                     if( def != null )
                     {
-                        var item = RPGItemFactory.createItemStack( def, amount, null );
+                        var item = RPGItemFactory.createItemStack( def, amount, null, SyncContext.INVENTORY );
                         player.getInventory().addItem( item );
                     }
                 }
             }
+            return true;
         }
         // returning false makes the "usage" show up. we don't want that.
         return true;

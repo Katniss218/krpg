@@ -16,6 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -123,7 +124,7 @@ public final class RPGItemFactory
      */
     @Nonnull
     @Contract( pure = true )
-    public static ItemStack createItemStack( @Nonnull RPGItemDef def, int amount, @Nullable RPGItemData data )
+    public static ItemStack createItemStack( @Nonnull RPGItemDef def, int amount, @Nullable RPGItemData data, SyncContext syncContext )
     {
         if( data == null )
         {
@@ -148,6 +149,18 @@ public final class RPGItemFactory
         loreLines.add( ColorUtils.GetComponent( "&8: " + rarity.getPrimaryColor() + rarity.getDisplayName() + " " + def.type.toString() ).decoration( TextDecoration.ITALIC, false ) );
         loreLines.add( Component.text( "" ) );
         AppendProperties( loreLines, def );
+
+        if( syncContext == SyncContext.SHOP_BUY )
+        {
+            loreLines.add( Component.text( "" ) );
+            loreLines.add( ColorUtils.GetComponent( "&a&lBuy (" + amount + "): ₡" + (def.value * amount) ) );
+        }
+        else if( syncContext == SyncContext.SHOP_SELL )
+        {
+            loreLines.add( Component.text( "" ) );
+            loreLines.add( ColorUtils.GetComponent( "&c&lSell (" + amount + "): ₡" + ((def.value / 5) * amount) ) );
+        }
+
         meta.lore( loreLines );
 
         meta.displayName( ColorUtils.GetComponent( "&a&lLv." + def.level + " " + rarity.getPrimaryColor() + def.displayName ).decoration( TextDecoration.ITALIC, false ) );
@@ -158,9 +171,13 @@ public final class RPGItemFactory
             {
                 double durabilityPercent = data.durabilityRemaining / (double)def.durability;
                 if( durabilityPercent < 0 )
+                {
                     durabilityPercent = 0;
+                }
                 else if( durabilityPercent > 1 )
+                {
                     durabilityPercent = 1;
+                }
 
                 d.setDamage( (int)Math.ceil( def.baseItem.getMaxDurability() * (1 - durabilityPercent) ) );
             }
@@ -208,7 +225,7 @@ public final class RPGItemFactory
      */
     @Nonnull
     @Contract( pure = true )
-    public static ItemStack syncItemStack( @Nonnull ItemStack item )
+    public static ItemStack syncItemStack( @Nonnull ItemStack item, SyncContext syncContext )
     {
         var nmsItemStack = CraftItemStack.asNMSCopy( item );
 
@@ -230,12 +247,12 @@ public final class RPGItemFactory
             return item; // Not RPGItem
         }
 
-        return createItemStack( def, item.getAmount(), persistentData );
+        return createItemStack( def, item.getAmount(), persistentData, syncContext );
     }
 
     @Nonnull
     @Contract( pure = true )
-    public static ItemStack syncItemStack( @Nonnull ItemStack item, @Nonnull RPGItemData newData )
+    public static ItemStack syncItemStack( @Nonnull ItemStack item, @Nonnull RPGItemData newData, SyncContext syncContext )
     {
         var nmsItemStack = CraftItemStack.asNMSCopy( item );
 
@@ -262,6 +279,20 @@ public final class RPGItemFactory
             return item; // Not RPGItem
         }
 
-        return createItemStack( def, item.getAmount(), newData );
+        return createItemStack( def, item.getAmount(), newData, syncContext );
+    }
+
+    public static void syncInventory( Inventory inv, SyncContext syncContext )
+    {
+        for( int i = 0; i < inv.getSize(); i++ )
+        {
+            ItemStack originalItem = inv.getItem( i );
+            if( originalItem != null )
+            {
+                ItemStack modifiedItem = RPGItemFactory.syncItemStack( originalItem, syncContext );
+
+                inv.setItem( i, modifiedItem );
+            }
+        }
     }
 }

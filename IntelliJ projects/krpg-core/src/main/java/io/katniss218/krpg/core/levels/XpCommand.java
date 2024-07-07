@@ -1,6 +1,5 @@
 package io.katniss218.krpg.core.levels;
 
-import io.katniss218.krpg.core.definitions.RPGEntityRegistry;
 import io.katniss218.krpg.core.players.RPGPlayerData;
 import io.katniss218.krpg.core.players.RPGPlayerDatabase;
 import io.katniss218.krpg.core.utils.ColorUtils;
@@ -56,7 +55,7 @@ public class XpCommand implements TabExecutor
                 if( target != null )
                 {
                     double xp = Double.parseDouble( args[2] );
-                    LevelUtils.AddXp( target, xp );
+                    LevelUtils.addXp( target, xp );
                     sender.sendMessage( ColorUtils.GetComponent( "&aAdded " + xp + " experience to " + target.getName() + "." ) );
                 }
             }
@@ -65,7 +64,7 @@ public class XpCommand implements TabExecutor
                 if( args.length == 2 )
                 {
                     double xp = Double.parseDouble( args[1] );
-                    LevelUtils.AddXp( player, xp );
+                    LevelUtils.addXp( player, xp );
                     sender.sendMessage( ColorUtils.GetComponent( "&aAdded " + xp + " experience to " + player.getName() + "." ) );
                 }
             }
@@ -78,7 +77,7 @@ public class XpCommand implements TabExecutor
                 if( target != null )
                 {
                     double xp = Double.parseDouble( args[2] );
-                    LevelUtils.AddXp( target, -xp );
+                    LevelUtils.addXp( target, -xp );
                     sender.sendMessage( ColorUtils.GetComponent( "&aRemoved " + xp + " experience from " + target.getName() + "." ) );
                 }
             }
@@ -87,7 +86,7 @@ public class XpCommand implements TabExecutor
                 if( args.length == 2 )
                 {
                     double xp = Double.parseDouble( args[1] );
-                    LevelUtils.AddXp( player, -xp );
+                    LevelUtils.addXp( player, -xp );
                     sender.sendMessage( ColorUtils.GetComponent( "&aRemoved " + xp + " experience from " + player.getName() + "." ) );
                 }
             }

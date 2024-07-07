@@ -1,7 +1,10 @@
-package io.katniss218.krpg.core.loottables;
+package io.katniss218.krpg.core.shops;
 
 import io.katniss218.krpg.core.KRPGCore;
 import io.katniss218.krpg.core.definitions.RPGLootTableRegistry;
+import io.katniss218.krpg.core.definitions.RPGShopDef;
+import io.katniss218.krpg.core.definitions.RPGShopRegistry;
+import io.katniss218.krpg.core.loottables.LootTableDropper;
 import io.katniss218.krpg.core.utils.ColorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -15,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RPGLootTableCommand implements TabExecutor
+public class RPGShopCommend implements TabExecutor
 {
     @Override
     public boolean onCommand( @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args )
@@ -30,50 +33,39 @@ public class RPGLootTableCommand implements TabExecutor
             RPGLootTableRegistry.reload();
             sender.sendMessage( ColorUtils.GetComponent( "&aReloaded all loot tables." ) );
         }
-        if( args.length >= 1 && args[0].equals( "get" ) )
+        if( args.length >= 1 && args[0].equals( "open" ) )
         {
-            if( !sender.hasPermission( "rpg." + command.getName() + ".get" ))
+            if( !sender.hasPermission( "rpg." + command.getName() + ".open" ) )
             {
                 sender.sendMessage( KRPGCore.getNoPermissionMsg() );
                 return true;
             }
-            if( sender instanceof Player player )
+
+            if( args.length == 2 && sender instanceof Player player )
             {
-                if( args.length == 2 )
+                String id = args[1];
+                RPGShopDef def = RPGShopRegistry.get( id );
+                if( def != null )
                 {
-                    String id = args[1];
-                    var def = RPGLootTableRegistry.get( id );
+                    ShopOpener.openShop( player, def );
+                    player.sendMessage( ColorUtils.GetComponent( "&aOpened shop '" + id + "'." ) );
+                }
+                return true;
+            }
+            if( args.length == 3 )
+            {
+                String id = args[1];
+                Player target = Bukkit.getPlayer( args[2] );
+                if( target != null )
+                {
+                    RPGShopDef def = RPGShopRegistry.get( id );
                     if( def != null )
                     {
-                        LootTableDropper.GiveLootTable( def, player );
-                        player.sendMessage( ColorUtils.GetComponent( "&aGave loot table '" + id + "' to player " + player.getName() + "." ) );
+                        ShopOpener.openShop( target, def );
+                        target.sendMessage( ColorUtils.GetComponent( "&aOpened shop '" + id + "' to player " + target.getName() + "." ) );
                     }
                 }
-            }
-        }
-        if( args.length >= 1 && args[0].equals( "give" ) )
-        {
-            if( !sender.hasPermission( "rpg." + command.getName() + ".give" ))
-            {
-                sender.sendMessage( KRPGCore.getNoPermissionMsg() );
                 return true;
-            }
-            if( sender instanceof Player player )
-            {
-                if( args.length == 3 )
-                {
-                    String id = args[1];
-                    Player target = Bukkit.getPlayer( args[2] );
-                    if( target != null )
-                    {
-                        var def = RPGLootTableRegistry.get( id );
-                        if( def != null )
-                        {
-                            LootTableDropper.GiveLootTable( def, target );
-                            player.sendMessage( ColorUtils.GetComponent( "&aGave loot table '" + id + "' to player " + player.getName() + "." ) );
-                        }
-                    }
-                }
             }
         }
         // returning false makes the "usage" show up. we don't want that.
@@ -86,13 +78,13 @@ public class RPGLootTableCommand implements TabExecutor
         if( args.length <= 1 )
         {
             // completing first arg.
-            return Arrays.asList( "get", "give" );
+            return Arrays.asList( "open" );
         }
-        if( args.length == 2 && args[0].equals( "get" ) )
+        if( args.length == 2 && args[0].equals( "open" ) )
         {
-            return RPGLootTableRegistry.getRegisteredIDs();
+            return RPGShopRegistry.getRegisteredIDs();
         }
-        if( args.length == 2 && args[0].equals( "give" ) )
+        if( args.length == 3 && args[0].equals( "open" ) )
         {
             var players = Bukkit.getOnlinePlayers();
             List<String> playerNames = new ArrayList<>();
@@ -101,10 +93,6 @@ public class RPGLootTableCommand implements TabExecutor
                 playerNames.add( player.getName() );
             }
             return playerNames;
-        }
-        if( args.length == 3 && args[0].equals( "give" ) )
-        {
-            return RPGLootTableRegistry.getRegisteredIDs();
         }
         return new ArrayList<>();
     }
